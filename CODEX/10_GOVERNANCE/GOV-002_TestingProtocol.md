@@ -41,45 +41,58 @@ All test categories below are defined in order of execution (fastest → slowest
 ```mermaid
 graph TD
     subgraph "Execution Order — Fast → Slow"
-        A["1. Static Analysis"] --> B["2. Unit Tests"]
-        B --> C["3. Property-Based Tests"]
-        C --> D["4. Snapshot Tests"]
-        D --> E["5. Mutation Tests"]
-        E --> F["6. Integration Tests"]
-        F --> G["7. Contract Tests"]
-        G --> H["8. Fuzz Tests"]
-        H --> I["9. E2E Tests"]
-        I --> J["10. GUI/Visual Tests"]
-        J --> K["11. Performance Tests"]
-        K --> L["12. Chaos/Resilience Tests"]
-        L --> M["13. Soak/Endurance Tests"]
-        M --> N["14. Hardware-in-the-Loop"]
+        A["1. IaC & Environment Tests"] --> B["2. Phase 1: Static Fortress"]
+        B --> C["3. Unit Tests"]
+        C --> D["4. Property-Based Tests"]
+        D --> E["5. Snapshot Tests"]
+        E --> F["6. Mutation Tests"]
+        F --> G["7. Integration Tests"]
+        G --> H["8. Contract Tests"]
+        H --> I["9. Fuzz Tests"]
+        I --> J["10. End-to-End (E2E) Tests"]
+        J --> K["11. Dynamic Security & Pen Tests"]
+        K --> L["12. GUI, Visual & i18n Tests"]
+        L --> M["13. Performance & Scalability Tests"]
+        M --> N["14. Chaos & Resilience Tests"]
+        N --> O["15. Soak / Endurance Tests"]
+        O --> P["16. User Acceptance Testing (UAT)"]
+        P --> Q["17. Hardware-in-the-Loop (HIL)"]
     end
 ```
 
 ---
 
-## 3. Static Analysis — "The Gatekeeper"
+## 3. Infrastructure-as-Code (IaC) Testing — "The Foundation"
 
-Inspects code **without executing it**. Catches ~40% of bugs in milliseconds.
+Tests the definition files (Terraform, Ansible, Kubernetes, Docker) that build the environment the code will run in.
 
-| Tool | Purpose | Threshold |
-|:-----|:--------|:----------|
-| **Linter** (Ruff, ESLint) | Style, unused imports, formatting | Zero warnings |
-| **Type Checker** (MyPy, tsc) | Static type verification | Strict mode |
-| **Complexity Analyzer** (Radon, Xenon) | Cyclomatic complexity | No function > 10 |
-| **Dead Code Detector** (Vulture) | Unreachable code | Zero unreachable |
-| **Security Scanner** (Bandit, Snyk) | CVEs, hardcoded secrets, injection | Zero HIGH/CRITICAL |
-| **Dependency Audit** (pip-audit, npm audit) | Known vulnerabilities in deps | Zero CRITICAL/HIGH |
-| **Coverage** (Coverage.py, Istanbul) | Line/branch coverage measurement | ≥80% line coverage |
+**When required**: Any project that defines its own infrastructure or deployment containers.
 
-**Execution**: Static analysis runs **first** in every pipeline. If any tool fails, pipeline halts.
-
-**Agent Rule**: When setting up a new project, configure ALL applicable static analysis tools before writing the first test.
+**Tools**: checkov, tfsec, Ansible Lint, Kubeval.
 
 ---
 
-## 4. Unit Tests — "The Logic Check"
+## 4. Phase 1: Static Fortress — "The Gatekeeper"
+
+Inspects code **without executing it**. Catches ~40% of bugs in milliseconds. This acts as a strict gate: all tools must pass with zero errors before execution tests begin.
+
+| Tool | Configuration | Target & Threshold |
+|:-----|:--------------|:-------------------|
+| **Linter** (Ruff, ESLint) | `ruff check` | Zero warnings. |
+| **Type Checker** (MyPy, tsc) | `mypy --strict` | **Zero errors.** All public functions must have type annotations. Replace `Any` with concrete types. Requires `py.typed` marker. |
+| **Complexity Analyzer** (Radon) | `radon cc -s -n C` | **No function >10 (Grade C or worse).** Functions >10 must be refactored. |
+| **Dead Code Detector** (Vulture) | `vulture --min-confidence 80` | **Zero unused code** at ≥80% confidence. |
+| **Security Scanner** (Bandit) | `bandit -ll` | **Zero HIGH/CRITICAL findings** (Medium+ severity scan). |
+| **Dependency Audit** (pip-audit) | `pip-audit` | **Zero known vulnerabilities.** |
+| **Coverage** (Coverage.py) | Line/branch coverage | **≥80% line coverage.** |
+
+**Execution**: The Static Fortress must run **first** in every pipeline (e.g., as separate sub-phases in `test_server.py`). If any tool fails, the pipeline halts.
+
+**Agent Rule**: When setting up a new project or fixing technical debt, expand the test server to run ALL these static analysis tools as separate sub-phases. Fix every error to zero before progressing.
+
+---
+
+## 5. Unit Tests — "The Logic Check"
 
 Validate **isolated functions** with no external dependencies.
 
@@ -100,7 +113,7 @@ Validate **isolated functions** with no external dependencies.
 
 ---
 
-## 5. Property-Based Tests — "The Edge-Case Hunter"
+## 6. Property-Based Tests — "The Edge-Case Hunter"
 
 Instead of testing specific inputs, **define invariants** and let the framework generate thousands of random inputs including edge cases (NaN, Infinity, empty, zero, negative, huge).
 
@@ -123,7 +136,7 @@ def test_clamp_always_bounded(value):
 
 ---
 
-## 6. Snapshot Tests — "The Drift Detector"
+## 7. Snapshot Tests — "The Drift Detector"
 
 Serialize complex outputs and compare against saved baselines. Detects unintended schema or output changes.
 
@@ -141,7 +154,7 @@ pytest tests/snapshot/ --snapshot-update
 
 ---
 
-## 7. Mutation Tests — "The Test Quality Auditor"
+## 8. Mutation Tests — "The Test Quality Auditor"
 
 Measures test **quality**, not just coverage. Makes small changes to source code ("mutants") and checks if tests catch them.
 
@@ -158,7 +171,7 @@ Measures test **quality**, not just coverage. Makes small changes to source code
 
 ---
 
-## 8. Integration Tests — "The Wiring Check"
+## 9. Integration Tests — "The Wiring Check"
 
 Validates that **two or more components** communicate correctly.
 
@@ -173,7 +186,7 @@ Validates that **two or more components** communicate correctly.
 
 ---
 
-## 9. Contract Tests — "The Handshake Verifier"
+## 10. Contract Tests — "The Handshake Verifier"
 
 Ensures producers and consumers agree on API/message schemas. Critical for microservices and multi-agent systems.
 
@@ -190,7 +203,7 @@ def test_api_response_contract(snapshot):
 
 ---
 
-## 10. Fuzz Tests — "The Crash Finder"
+## 11. Fuzz Tests — "The Crash Finder"
 
 Inject random/malformed inputs into parsers, APIs, and deserializers.
 
@@ -202,7 +215,7 @@ Inject random/malformed inputs into parsers, APIs, and deserializers.
 
 ---
 
-## 11. End-to-End Tests — "The Full Stack Proof"
+## 12. End-to-End Tests — "The Full Stack Proof"
 
 Run the **entire system** from input to output.
 
@@ -215,24 +228,46 @@ Run the **entire system** from input to output.
 
 ---
 
-## 12. GUI / Visual Tests — "The Pixel Proof"
+## 13. Dynamic Security & Penetration Testing — "The Breach Simulator"
 
-For projects with user interfaces, verify actual rendered output.
+Beyond static scanning, this tests the running, integrated application for live exploits.
+
+| Methodology | Purpose |
+|:------------|:--------|
+| **DAST (Dynamic Application Security Testing)** | Automatically interacts with the running app from the outside to find runtime vulnerabilities (XSS, SQLi, CSRF). |
+| **Penetration Testing (Pen Testing)** | Manual or automated ethical hacking attempts using real-world attack vectors. |
+
+**Goal**: Discover zero-day logic flaws and environment-specific bypasses that static scanning inherently misses.
+
+**Tools**: OWASP ZAP, Burp Suite.
+
+---
+
+## 14. GUI, Visual & l10n Tests — "The Pixel Proof"
+
+For projects with user interfaces, verify actual rendered output and accessibility.
 
 | Technique | What It Catches |
 |:----------|:----------------|
 | Screenshot comparison | Visual regressions |
 | Element presence | Missing UI components |
-| Color/pixel verification | Rendering correctness |
-| Accessibility scanning | WCAG compliance |
+| Accessibility scanning (a11y) | WCAG compliance |
+| Localization (l10n/i18n) | UI breaks across languages, currencies, and time zones |
 
 **Tools**: Playwright, Cypress, Percy (visual diff), axe (accessibility)
 
 ---
 
-## 13. Performance Tests — "The Stopwatch"
+## 15. Performance & Scalability Tests — "The Pressure Gauge"
 
-**Define latency budgets** for critical paths, benchmark them, and fail on regression.
+Verify speed, responsiveness, and stability of the application under various conditions.
+
+| Test Type | Definition |
+|:----------|:-----------|
+| **Baseline Performance** | Speed and responsiveness under normal operations. Define latency budgets. |
+| **Load Testing** | System behavior under expected peak user loads. |
+| **Stress Testing** | Pushing the system beyond expected limits until it breaks, establishing the upper boundary. |
+| **Spike Testing** | Hitting the system with a massive, sudden surge of traffic (e.g., flash sales). |
 
 ```bash
 # Save baseline
@@ -248,12 +283,13 @@ pytest tests/performance/ --benchmark-compare=baseline --benchmark-compare-fail=
 
 ---
 
-## 14. Chaos / Resilience Tests — "The Torture Chamber"
+## 16. Chaos & Resilience Tests — "The Torture Chamber"
 
-Intentionally **break things** to verify graceful degradation.
+Intentionally **break things** to verify graceful degradation and operational recovery.
 
 | Scenario | Method | Success Criteria |
 |:---------|:-------|:-----------------|
+| Disaster Recovery / Failover | Force critical database or router to fail | Backup system takes over seamlessly with no data loss |
 | Process death | `kill -9` a critical service | System detects loss, degrades gracefully |
 | Latency spike | Inject 2-5 second delays | Other components remain responsive |
 | Resource exhaustion | Consume all RAM/CPU | System sheds load, core survives |
@@ -261,7 +297,7 @@ Intentionally **break things** to verify graceful degradation.
 
 ---
 
-## 15. Soak / Endurance Tests — "The Marathon"
+## 17. Soak / Endurance Tests — "The Marathon"
 
 Run the system under normal load for **extended periods** (hours to days) to detect:
 - Memory leaks
@@ -274,7 +310,15 @@ Run the system under normal load for **extended periods** (hours to days) to det
 
 ---
 
-## 16. Hardware-in-the-Loop (HIL) — "The Final Gate"
+## 18. User Acceptance Testing (UAT) — "The Business Sign-Off"
+
+Real users or stakeholders perform exploratory or structured testing on an RC (Release Candidate) build to confirm it solves the original business problem.
+
+**Requirement**: While automated E2E proves the *spec* works, UAT proves the spec was *correct*. 
+
+---
+
+## 19. Hardware-in-the-Loop (HIL) — "The Final Gate"
 
 For projects with physical hardware components. Run code on actual embedded hardware with simulated I/O.
 
@@ -282,7 +326,7 @@ For projects with physical hardware components. Run code on actual embedded hard
 
 ---
 
-## 17. Test Artifacts & Forensic Reports
+## 20. Test Artifacts & Forensic Reports
 
 > **"No Report = No Pass."**
 
@@ -319,29 +363,33 @@ tests/artifacts/
 
 ---
 
-## 18. Execution Order (Fail-Fast Cascade)
+## 21. Execution Order (Fail-Fast Cascade)
 
 ```
-1. Static Analysis     → Fastest. Catches typos, types, security.
-2. Unit Tests          → Fast. Catches logic errors.
-3. Property Tests      → Catches edge cases.
-4. Snapshot Tests      → Catches drift.
-5. Mutation Tests      → Catches weak tests.
-6. Integration Tests   → Catches wiring errors.
-7. Contract Tests      → Catches schema disagreements.
-8. Fuzz Tests          → Catches parser crashes.
-9. E2E Tests           → Slow. Full stack validation.
-10. GUI/Visual Tests   → Catches visual regressions.
-11. Performance Tests  → Catches speed regressions.
-12. Chaos Tests        → Catches resilience failures.
-13. Soak Tests         → Catches long-duration issues.
+1. IaC & Env Tests       → Fastest. Validates Terraform/K8s/Ansible.
+2. Static Fortress       → Fastest. Catches typos, types, security.
+3. Unit Tests            → Fast. Catches logic errors.
+4. Property Tests        → Catches edge cases.
+5. Snapshot Tests        → Catches drift.
+6. Mutation Tests        → Catches weak tests.
+7. Integration Tests     → Catches wiring errors.
+8. Contract Tests        → Catches schema disagreements.
+9. Fuzz Tests            → Catches parser crashes.
+10. E2E Tests            → Slow. Full stack validation.
+11. Dynamic Security     → Catches runtime exploits via DAST.
+12. GUI/Visual/i18n      → Catches visual regressions and localization errors.
+13. Perf/Scalability     → Catches speed regressions under varying loads.
+14. Chaos/Resilience     → Verifies Disaster Recovery and failover logic.
+15. Soak Tests           → Catches long-duration issues (leaks).
+16. UAT                  → Manual. Validates business requirements.
+17. Hardware-in-Loop     → Validates embedded physical assets.
 ```
 
 **Rule**: If any tier fails, all subsequent tiers are skipped. Fix the fastest-failing tier first.
 
 ---
 
-## 19. Requirements Traceability (DO-178C §6.4)
+## 22. Requirements Traceability (DO-178C §6.4)
 
 > **"If you can't trace a test to a requirement, why does the test exist? If a requirement has no test, how do you know it works?"**
 
@@ -378,7 +426,7 @@ Maintain a traceability matrix (in `CODEX/40_VERIFICATION/`) mapping:
 
 ---
 
-## 20. Coverage Thresholds
+## 23. Coverage Thresholds
 
 | Metric | Standard | Safety-Critical | Enforcement |
 |:-------|:---------|:----------------|:------------|
@@ -406,7 +454,7 @@ For safety-critical code paths, **Modified Condition/Decision Coverage** is requ
 
 ---
 
-## 21. Regression Testing Policy
+## 24. Regression Testing Policy
 
 Every **bug fix** must include a regression test that:
 1. **Reproduces** the original failure (test fails without the fix)
@@ -428,7 +476,7 @@ def test_regression_issue_42_null_token():
 
 ---
 
-## 22. Flaky Test Quarantine
+## 25. Flaky Test Quarantine
 
 A test that passes sometimes and fails sometimes is **broken**, not "intermittent."
 
@@ -447,7 +495,7 @@ Common flaky test causes:
 
 ---
 
-## 23. Test Environment Reproducibility
+## 26. Test Environment Reproducibility
 
 > **"If I can't reproduce your test result on a clean machine, your test is worthless."**
 
@@ -462,7 +510,7 @@ Common flaky test causes:
 
 ---
 
-## 24. Test Independence & Review
+## 27. Test Independence & Review
 
 > NASA IV&V mandates that critical test verification be performed by someone other than the author.
 
@@ -474,14 +522,14 @@ Common flaky test causes:
 
 ---
 
-## 25. Agent Instructions
+## 28. Agent Instructions
 
 When an architect asks you to "set up testing" or "add tests," follow this checklist:
 
-1. **Read this protocol** — understand all 14 tiers + requirements traceability
+1. **Read this protocol** — understand all 17 tiers + requirements traceability
 2. **Assess applicability** — not every project needs HIL or chaos tests, but tiers 1-9 are almost always required
 3. **Start from the top** — implement static analysis first, then unit, then work down
-4. **Create the artifact directory structure** (§17)
+4. **Create the artifact directory structure** (§20)
 5. **Configure pytest markers** or equivalent:
    ```ini
    [pytest]
@@ -493,11 +541,11 @@ When an architect asks you to "set up testing" or "add tests," follow this check
        safety: Safety-critical path tests
        quarantine: Flaky tests under investigation
    ```
-6. **Set up coverage** with minimum thresholds (§20)
-7. **Create traceability matrix** linking requirements to tests (§19)
-8. **Add to CI pipeline** in fail-fast order (§18)
+6. **Set up coverage** with minimum thresholds (§23)
+7. **Create traceability matrix** linking requirements to tests (§22)
+8. **Add to CI pipeline** in fail-fast order (§21)
 9. **Ensure assertion density** ≥2 per test function
-10. **Pin all dependencies** with lockfiles for reproducibility (§23)
+10. **Pin all dependencies** with lockfiles for reproducibility (§26)
 11. **Update `CODEX/00_INDEX/MANIFEST.yaml`** when test specs are created
 
 ---
