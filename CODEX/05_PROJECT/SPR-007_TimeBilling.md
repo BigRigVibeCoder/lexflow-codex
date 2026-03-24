@@ -31,7 +31,7 @@ version: 1.0.0
 | **GOV-002** | Unit tests for billing calculations. Integration tests for invoice generation. |
 | **GOV-003** | TypeScript strict. Currency as integer cents (never float). |
 | **GOV-004** | Invoice void (never delete). Payment recording validates against invoice total. |
-| **GOV-005** | Branch: `feature/SPR-007-TXXX-description`. |
+| **GOV-005** | Branch: `feature/SPR-007-time-billing`. One commit per task. | |
 | **GOV-006** | Invoice creation, payment recording, void operations logged. |
 
 ---
@@ -39,7 +39,7 @@ version: 1.0.0
 ## Frontend Agent Tasks (lexflow-frontend)
 
 ### T-063: Time & Billing DB Schema + Drizzle
-- **Branch:** `feature/SPR-007-T063-billing-schema`
+- **Commit:** `feat(SPR-007): T-063-billing-schema`
 - **Dependencies:** T-007, T-021
 - **Deliverable:**
   - `time_entries` (id, matterId, userId, description, durationMinutes, hourlyRateCents, isBillable, date, createdAt)
@@ -52,84 +52,84 @@ version: 1.0.0
 - **Status:** [ ] Not Started
 
 ### T-064: Time Entry tRPC Router
-- **Branch:** `feature/SPR-007-T064-time-entry-router`
+- **Commit:** `feat(SPR-007): T-064-time-entry-router`
 - **Dependencies:** T-063, T-010
 - **Deliverable:** CRUD + running timer. Users see own entries by default. Permissions for viewing all.
 - **Acceptance:** Create time entry, start/stop timer, list by matter.
 - **Status:** [ ] Not Started
 
 ### T-065: Time Entry UI
-- **Branch:** `feature/SPR-007-T065-time-entry-ui`
+- **Commit:** `feat(SPR-007): T-065-time-entry-ui`
 - **Dependencies:** T-064, T-013
 - **Deliverable:** Time list, new entry form (matter, description, duration or timer), timer widget in header.
 - **Acceptance:** Timer starts/stops. Manual entry works. Duration displays as HH:MM.
 - **Status:** [ ] Not Started
 
 ### T-066: Matter Time Tab
-- **Branch:** `feature/SPR-007-T066-matter-time-tab`
+- **Commit:** `feat(SPR-007): T-066-matter-time-tab`
 - **Dependencies:** T-064
 - **Deliverable:** Time entries for a specific matter. Total hours, total billable amount.
 - **Acceptance:** Tab shows matter-scoped time entries with running totals.
 - **Status:** [ ] Not Started
 
 ### T-067: Expense Entry tRPC Procedures
-- **Branch:** `feature/SPR-007-T067-expense-procedures`
+- **Commit:** `feat(SPR-007): T-067-expense-procedures`
 - **Dependencies:** T-063, T-010
 - **Deliverable:** CRUD for expenses. Receipt linking to documents (T-055).
 - **Acceptance:** Create expense with receipt link. List by matter.
 - **Status:** [ ] Not Started
 
 ### T-068: Invoice tRPC Router
-- **Branch:** `feature/SPR-007-T068-invoice-router`
+- **Commit:** `feat(SPR-007): T-068-invoice-router`
 - **Dependencies:** T-063, T-064, T-010
 - **Deliverable:** Create (from uninvoiced time entries + expenses), list, get, void. Invoice number auto-generation (INV-YYYY-NNNN). Status transitions: draft → sent → paid/partial/void.
 - **Acceptance:** Create invoice from time entries. Void marks as voided. Never deletes.
 - **Status:** [ ] Not Started
 
 ### T-069: Payment tRPC Procedures
-- **Branch:** `feature/SPR-007-T069-payment-procedures`
+- **Commit:** `feat(SPR-007): T-069-payment-procedures`
 - **Dependencies:** T-063, T-068, T-044a
 - **Deliverable:** Record payments. Trust transfer payments call trust-client fee-transfer. Update invoice paid amount. Mark invoice as paid when fully paid.
 - **Acceptance:** Payment reduces outstanding balance. Trust transfer creates trust transaction.
 - **Status:** [ ] Not Started
 
 ### T-070: Invoice Creation UI
-- **Branch:** `feature/SPR-007-T070-invoice-creation-ui`
+- **Commit:** `feat(SPR-007): T-070-invoice-creation-ui`
 - **Dependencies:** T-068
 - **Deliverable:** Invoice wizard: select matter → select uninvoiced time entries + expenses → review → create. Include flat fee option.
 - **Acceptance:** Wizard creates invoice with selected line items. Total calculated correctly.
 - **Status:** [ ] Not Started
 
 ### T-071: Invoice Detail UI
-- **Branch:** `feature/SPR-007-T071-invoice-detail-ui`
+- **Commit:** `feat(SPR-007): T-071-invoice-detail-ui`
 - **Dependencies:** T-068
 - **Deliverable:** Invoice view with header (client, matter, dates), line items table, payment history, status badge, void button.
 - **Acceptance:** Invoice renders with all details. Void button works (confirmation dialog).
 - **Status:** [ ] Not Started
 
 ### T-072: Payment Recording UI
-- **Branch:** `feature/SPR-007-T072-payment-ui`
+- **Commit:** `feat(SPR-007): T-072-payment-ui`
 - **Dependencies:** T-069
 - **Deliverable:** Payment form: amount, method, reference. Trust transfer option shows trust accounts.
 - **Acceptance:** Recording payment updates invoice status. Trust transfer triggers trust service.
 - **Status:** [ ] Not Started
 
 ### T-073: Billing Dashboard
-- **Branch:** `feature/SPR-007-T073-billing-dashboard`
+- **Commit:** `feat(SPR-007): T-073-billing-dashboard`
 - **Dependencies:** T-068
 - **Deliverable:** KPI cards: total outstanding, total overdue, monthly revenue. Invoice list by status. Revenue chart (bar, monthly).
 - **Acceptance:** Dashboard shows real billing data. Charts render.
 - **Status:** [ ] Not Started
 
 ### T-074: Matter Billing Tab
-- **Branch:** `feature/SPR-007-T074-matter-billing-tab`
+- **Commit:** `feat(SPR-007): T-074-matter-billing-tab`
 - **Dependencies:** T-068
 - **Deliverable:** Per-matter billing view: invoices, payments, outstanding balance.
 - **Acceptance:** Tab shows matter-scoped billing with running totals.
 - **Status:** [ ] Not Started
 
 ### T-075: Aging Report
-- **Branch:** `feature/SPR-007-T075-aging-report`
+- **Commit:** `feat(SPR-007): T-075-aging-report`
 - **Dependencies:** T-068
 - **Deliverable:** AR aging buckets: Current, 1-30, 31-60, 61-90, 90+ days. Table and summary cards.
 - **Acceptance:** Aging buckets calculate correctly based on invoice due dates.

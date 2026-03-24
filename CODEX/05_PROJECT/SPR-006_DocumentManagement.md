@@ -31,7 +31,7 @@ version: 1.0.0
 | **GOV-002** | Unit tests for upload validation. Integration tests for upload/download. |
 | **GOV-003** | TypeScript strict. File type validation. |
 | **GOV-004** | Upload size limits enforced (50MB max). Unsupported file type → structured error. |
-| **GOV-005** | Branch: `feature/SPR-006-TXXX-description`. |
+| **GOV-005** | Branch: `feature/SPR-006-document-management`. One commit per task. | |
 | **GOV-006** | Document upload/download/delete logged with file metadata. |
 | **GOV-008** | Files stored at `/var/lexflow/documents/`. No cloud storage. |
 
@@ -40,7 +40,7 @@ version: 1.0.0
 ## Frontend Agent Tasks (lexflow-frontend)
 
 ### T-055: Document DB Schema + Drizzle
-- **Branch:** `feature/SPR-006-T055-document-schema`
+- **Commit:** `feat(SPR-006): T-055-document-schema`
 - **Dependencies:** T-007
 - **Deliverable:**
   - `documents` table: id, matterId (FK), title, description, category (enum: pleading, correspondence, medical_record, billing, evidence, court_order, other), originalFilename, storedFilename (UUID-based), mimeType, sizeBytes, uploadedBy (FK users), tags (text array), createdAt, updatedAt
@@ -49,7 +49,7 @@ version: 1.0.0
 - **Status:** [ ] Not Started
 
 ### T-056V: Upload Service (Local Disk)
-- **Branch:** `feature/SPR-006-T056V-upload-service`
+- **Commit:** `feat(SPR-006): T-056V-upload-service`
 - **Dependencies:** T-055, T-010
 - **Deliverable:**
   - `src/lib/document-storage.ts` — local disk storage at `/var/lexflow/documents/`
@@ -62,7 +62,7 @@ version: 1.0.0
 - **Status:** [ ] Not Started
 
 ### T-057V: Document tRPC Router (Local)
-- **Branch:** `feature/SPR-006-T057V-document-router`
+- **Commit:** `feat(SPR-006): T-057V-document-router`
 - **Dependencies:** T-055, T-056V, T-010
 - **Deliverable:**
   - `upload` — accept multipart, store file, create DB record
@@ -75,7 +75,7 @@ version: 1.0.0
 - **Status:** [ ] Not Started
 
 ### T-058V: Document Upload Component
-- **Branch:** `feature/SPR-006-T058V-upload-component`
+- **Commit:** `feat(SPR-006): T-058V-upload-component`
 - **Dependencies:** T-057V
 - **Deliverable:**
   - Drag-and-drop upload zone (shadcn/ui)
@@ -87,7 +87,7 @@ version: 1.0.0
 - **Status:** [ ] Not Started
 
 ### T-059: Document List UI
-- **Branch:** `feature/SPR-006-T059-document-list-ui`
+- **Commit:** `feat(SPR-006): T-059-document-list-ui`
 - **Dependencies:** T-057V
 - **Deliverable:**
   - Filterable DataTable: filename, category badge, size, uploaded by, date
@@ -98,7 +98,7 @@ version: 1.0.0
 - **Status:** [ ] Not Started
 
 ### T-060: Medical Record Viewer
-- **Branch:** `feature/SPR-006-T060-pdf-viewer`
+- **Commit:** `feat(SPR-006): T-060-pdf-viewer`
 - **Dependencies:** T-057V
 - **Deliverable:**
   - In-app PDF viewer (react-pdf or similar)
@@ -110,7 +110,7 @@ version: 1.0.0
 - **Status:** [ ] Not Started
 
 ### T-061: Document Metadata Editor
-- **Branch:** `feature/SPR-006-T061-metadata-editor`
+- **Commit:** `feat(SPR-006): T-061-metadata-editor`
 - **Dependencies:** T-057V
 - **Deliverable:**
   - Inline editing for title, description, tags
@@ -120,7 +120,7 @@ version: 1.0.0
 - **Status:** [ ] Not Started
 
 ### T-062: Global Document Search
-- **Branch:** `feature/SPR-006-T062-document-search`
+- **Commit:** `feat(SPR-006): T-062-document-search`
 - **Dependencies:** T-057V
 - **Deliverable:**
   - Cross-matter document search by title, description, tags
