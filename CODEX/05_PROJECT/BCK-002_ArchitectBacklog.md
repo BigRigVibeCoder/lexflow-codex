@@ -35,14 +35,14 @@ version: 1.0.0
 
 | ID | Task | Category | Dependencies | Deliverable | Status |
 |:---|:-----|:---------|:-------------|:------------|:-------|
-| A-001 | Verify `lexflow-prod` VM accessible | ARCH-INFRA | None | SSH access confirmed, note IP/hostname | [ ] |
-| A-002 | Pre-stage prod environment | ARCH-INFRA | A-001 | Ensure VM has: Ubuntu 22.04+, git, Node.js 20, basic firewall | [ ] |
-| A-003 | Create architect audit checklist template | ARCH-AUDIT | None | `40_VERIFICATION/VER-001_SprintAuditChecklist.md` — reusable checklist for all sprint audits | [ ] |
-| A-004 | Create contract compliance test script | ARCH-INTEG | None | `scripts/contract-test.sh` — verifies both services health endpoints respond | [ ] |
-| A-005 | Monitor frontend agent progress | ARCH-MON | Agents running | Check frontend repo for commits. Note any blockers. | [ ] |
-| A-006 | Monitor backend agent progress | ARCH-MON | Agents running | Check backend repo for commits. Note any blockers. | [ ] |
-| A-007 | SPR-001 Architect Audit | ARCH-AUDIT | SPR-001 complete | Pull both repos. Run audit checklist. File DEF- if needed. | [ ] |
-| A-008 | SPR-001 Deploy to prod | ARCH-DEPLOY | A-007 passes | Run deploy, verify health endpoints on prod | [ ] |
+| A-001 | Verify `lexflow-prod` VM accessible | ARCH-INFRA | None | SSH access confirmed, note IP/hostname | [x] |
+| A-002 | Pre-stage prod environment | ARCH-INFRA | A-001 | Ensure VM has: Ubuntu 22.04+, git, Node.js 20, basic firewall | [x] |
+| A-003 | Create architect audit checklist template | ARCH-AUDIT | None | `40_VERIFICATION/VER-001_SprintAuditChecklist.md` — reusable checklist for all sprint audits | [x] |
+| A-004 | Create contract compliance test script | ARCH-INTEG | None | `scripts/contract-test.sh` — verifies both services health endpoints respond | [x] |
+| A-005 | Monitor frontend agent progress | ARCH-MON | Agents running | Check frontend repo for commits. Note any blockers. | [x] |
+| A-006 | Monitor backend agent progress | ARCH-MON | Agents running | Check backend repo for commits. Note any blockers. | [x] |
+| A-007 | SPR-001 Architect Audit | ARCH-AUDIT | SPR-001 complete | Pull both repos. Run audit checklist. File DEF- if needed. | [x] |
+| A-008 | SPR-001 Deploy to prod | ARCH-DEPLOY | A-007 passes | Run deploy, verify health endpoints on prod | [x] |
 
 ---
 
@@ -50,9 +50,9 @@ version: 1.0.0
 
 | ID | Task | Category | Dependencies | Deliverable | Status |
 |:---|:-----|:---------|:-------------|:------------|:-------|
-| A-009 | SPR-002 Architect Audit | ARCH-AUDIT | SPR-002 complete | Audit auth system against GOV-003/004. Test RBAC. | [ ] |
+| A-009 | SPR-002 Architect Audit | ARCH-AUDIT | SPR-002 complete | Audit auth system against GOV-003/004. Test RBAC. | [x] |
 | A-010 | Deploy auth to prod (v0.2) | ARCH-DEPLOY | A-009 passes | Run migrations, restart web service | [ ] |
-| A-011 | Create SPR-002 → SPR-004 handoff note | ARCH-CODEX | SPR-002 complete | Update backend agent: "Frontend auth is live, you can test validate-matter-client callback" | [ ] |
+| A-011 | Create SPR-002 → SPR-004 handoff note | ARCH-CODEX | SPR-002 complete | Update backend agent: "Frontend auth is live, you can test validate-matter-client callback" | [x] |
 
 ---
 
@@ -60,8 +60,8 @@ version: 1.0.0
 
 | ID | Task | Category | Dependencies | Deliverable | Status |
 |:---|:-----|:---------|:-------------|:------------|:-------|
-| A-012 | SPR-003 Architect Audit | ARCH-AUDIT | SPR-003 complete | Audit matter management. Test matter creation wizard. | [ ] |
-| A-013 | SPR-004 Architect Audit | ARCH-AUDIT | SPR-004 complete | **Critical:** audit all 17 CON-002 routes. TypeBox schemas match contract. | [ ] |
+| A-012 | SPR-003 Architect Audit | ARCH-AUDIT | SPR-003 complete | Audit matter management. Test matter creation wizard. | [x] |
+| A-013 | SPR-004 Architect Audit | ARCH-AUDIT | SPR-004 complete | **Critical:** audit all 17 CON-002 routes. TypeBox schemas match contract. | [x] |
 | A-014 | Deploy matter mgmt to prod (v0.3) | ARCH-DEPLOY | A-012 passes | Run migrations, restart web service | [ ] |
 | A-015 | Deploy trust service to prod | ARCH-DEPLOY | A-013 passes | Run trust migrations, start trust service on port 4000 | [ ] |
 
