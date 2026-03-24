@@ -36,3 +36,9 @@ tmp/
 
 # Secrets
 keys/
+
+# Secrets — NEVER commit these
+keys/
+*.pem
+*.key
+.env

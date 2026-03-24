@@ -30,7 +30,12 @@ run_remote() {
     if $LOCAL_MODE; then
         eval "$1"
     else
-        ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "bdavidriggins@${REMOTE_HOST}" "echo 'icelimbsheath' | sudo -S bash -c '$1'"
+        if [ -z "${SUDO_PASS:-}" ]; then
+            echo -e "${RED}ERROR: SUDO_PASS env var not set. Export it before running deploy.${NC}"
+            echo "  export SUDO_PASS='your_sudo_password'"
+            exit 1
+        fi
+        ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "bdavidriggins@${REMOTE_HOST}" "echo '${SUDO_PASS}' | sudo -S bash -c '$1'"
     fi
 }
 
