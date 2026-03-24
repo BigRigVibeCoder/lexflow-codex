@@ -2,7 +2,7 @@
 id: SPR-005
 title: "Trust Accounting Frontend Sprint"
 type: sprint
-status: PLANNING
+status: ACTIVE
 owner: architect
 agents: [frontend]
 tags: [sprint, phase-3, trust-accounting, frontend, integration]
@@ -32,7 +32,7 @@ version: 1.0.0
 | **GOV-002** | Unit tests for trust-client with mock server. Integration tests against running trust service. |
 | **GOV-003** | TypeScript strict. Trust client types match CON-002 schemas exactly. |
 | **GOV-004** | Circuit breaker in trust-client (CON-001 §4). Trust service errors displayed in UI. |
-| **GOV-005** | Branch: `feature/SPR-005-TXXX-description`. |
+| **GOV-005** | Branch: `feature/SPR-005-trust-accounting-ui`. One commit per task: `feat(SPR-005): T-XXX description`. |
 | **GOV-006** | Trust operations logged client-side. API call correlation IDs. |
 | **GOV-007** | Task status updated. |
 | **GOV-008** | Trust service on localhost:4000. Shared secret from env. |
@@ -42,7 +42,7 @@ version: 1.0.0
 ## Frontend Agent Tasks (lexflow-frontend)
 
 ### T-044a: Trust Client Library (Mock Tests)
-- **Branch:** `feature/SPR-005-T044a-trust-client-lib`
+- **Commit:** `feat(SPR-005): T-044a trust client library`
 - **Dependencies:** T-002
 - **Deliverable:**
   - `src/lib/trust-client/index.ts` — HTTP client for trust service
@@ -55,7 +55,7 @@ version: 1.0.0
 - **Status:** [ ] Not Started
 
 ### T-044b: Trust Client Integration Tests
-- **Branch:** `feature/SPR-005-T044b-trust-client-integration`
+- **Commit:** `test(SPR-005): T-044b trust client integration tests`
 - **Dependencies:** T-044a, SPR-004 complete
 - **Deliverable:**
   - Integration test suite that runs against actual trust service on localhost:4000
@@ -66,7 +66,7 @@ version: 1.0.0
 - **Status:** [ ] Not Started
 
 ### T-049: Trust tRPC Proxy Router
-- **Branch:** `feature/SPR-005-T049-trust-trpc-proxy`
+- **Commit:** `feat(SPR-005): T-049 trust tRPC proxy router`
 - **Dependencies:** T-044a, T-010
 - **Deliverable:**
   - `src/server/routers/trust.ts` — tRPC procedures that proxy to trust-client
@@ -76,7 +76,7 @@ version: 1.0.0
 - **Status:** [ ] Not Started
 
 ### T-050: Trust Dashboard UI
-- **Branch:** `feature/SPR-005-T050-trust-dashboard`
+- **Commit:** `feat(SPR-005): T-050 trust dashboard UI`
 - **Dependencies:** T-049, T-013
 - **Deliverable:**
   - `src/app/(dashboard)/trust/page.tsx` — trust overview
@@ -86,7 +86,7 @@ version: 1.0.0
 - **Status:** [ ] Not Started
 
 ### T-051: Trust Account Management UI
-- **Branch:** `feature/SPR-005-T051-trust-account-ui`
+- **Commit:** `feat(SPR-005): T-051 trust account management UI`
 - **Dependencies:** T-049
 - **Deliverable:**
   - Account list page with balances
@@ -97,7 +97,7 @@ version: 1.0.0
 - **Status:** [ ] Not Started
 
 ### T-052: Deposit/Disbursement UI
-- **Branch:** `feature/SPR-005-T052-transaction-ui`
+- **Commit:** `feat(SPR-005): T-052 deposit/disbursement UI`
 - **Dependencies:** T-049
 - **Deliverable:**
   - Deposit form: amount, memo, payment method, reference
@@ -109,7 +109,7 @@ version: 1.0.0
 - **Status:** [ ] Not Started
 
 ### T-053: Reconciliation UI
-- **Branch:** `feature/SPR-005-T053-reconciliation-ui`
+- **Commit:** `feat(SPR-005): T-053 reconciliation UI`
 - **Dependencies:** T-049
 - **Deliverable:**
   - Bank statement CSV upload page
@@ -121,7 +121,7 @@ version: 1.0.0
 - **Status:** [ ] Not Started
 
 ### T-054: Matter Trust Tab (Activate)
-- **Branch:** `feature/SPR-005-T054-matter-trust-tab`
+- **Commit:** `feat(SPR-005): T-054 matter trust tab activation`
 - **Dependencies:** T-049, T-029
 - **Deliverable:**
   - Replace "Coming in SPR-005" placeholder in matter detail trust tab
@@ -151,16 +151,16 @@ version: 1.0.0
 
 ## Sprint Checklist
 
-| Task | Agent | Status | Branch | Audited |
-|:-----|:------|:-------|:-------|:--------|
-| T-044a | Frontend | [ ] | `feature/SPR-005-T044a-trust-client-lib` | [ ] |
-| T-044b | Frontend | [ ] | `feature/SPR-005-T044b-trust-client-integration` | [ ] |
-| T-049 | Frontend | [ ] | `feature/SPR-005-T049-trust-trpc-proxy` | [ ] |
-| T-050 | Frontend | [ ] | `feature/SPR-005-T050-trust-dashboard` | [ ] |
-| T-051 | Frontend | [ ] | `feature/SPR-005-T051-trust-account-ui` | [ ] |
-| T-052 | Frontend | [ ] | `feature/SPR-005-T052-transaction-ui` | [ ] |
-| T-053 | Frontend | [ ] | `feature/SPR-005-T053-reconciliation-ui` | [ ] |
-| T-054 | Frontend | [ ] | `feature/SPR-005-T054-matter-trust-tab` | [ ] |
+| Task | Agent | Status |
+|:-----|:------|:-------|
+| T-044a | Frontend | [ ] |
+| T-044b | Frontend | [ ] |
+| T-049 | Frontend | [ ] |
+| T-050 | Frontend | [ ] |
+| T-051 | Frontend | [ ] |
+| T-052 | Frontend | [ ] |
+| T-053 | Frontend | [ ] |
+| T-054 | Frontend | [ ] |
 
 ---
 
