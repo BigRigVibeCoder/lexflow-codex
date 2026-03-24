@@ -39,7 +39,7 @@ services:
   # --- Trust Service (Fastify 4) ---
   lexflow-trust:
     build:
-      context: ../lexflow-backend
+      context: ${BACKEND_DIR:-/opt/lexflow/backend}
       dockerfile: Dockerfile
     container_name: lexflow-trust
     restart: unless-stopped
@@ -65,7 +65,7 @@ services:
   # --- Web Service (Next.js 15) ---
   lexflow-web:
     build:
-      context: ../lexflow-frontend
+      context: ${FRONTEND_DIR:-/opt/lexflow/frontend}
       dockerfile: Dockerfile
     container_name: lexflow-web
     restart: unless-stopped
