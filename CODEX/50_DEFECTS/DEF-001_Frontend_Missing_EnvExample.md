@@ -2,7 +2,7 @@
 id: DEF-001
 title: "Frontend Missing .env.example File"
 type: reference
-status: OPEN
+status: CLOSED
 owner: architect
 agents: [coder]
 tags: [bug, governance, sprint]

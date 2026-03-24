@@ -2,7 +2,7 @@
 id: DEF-002
 title: "Backend ESLint Config References Missing Package"
 type: reference
-status: OPEN
+status: CLOSED
 owner: architect
 agents: [coder]
 tags: [bug, governance, sprint]

@@ -37,7 +37,7 @@ version: 1.0.0
 |:------|:---------|:--------|:------|
 | `npm install` | ✅ | ✅ | |
 | `npm run build` | ✅ | ✅ | |
-| `npm run lint` | ✅ | ❌ | Missing `typescript-eslint` package — DEF-002 |
+| `npm run lint` | ✅ | ✅ | DEF-002 fixed — `typescript-eslint` added |
 | `npm run typecheck` | ✅ | ✅ | |
 | `npm run test` | ✅ (2/2) | ✅ (3/3) | |
 
@@ -149,8 +149,7 @@ version: 1.0.0
 
 ### Concerns
 
-1. **Frontend missing `.env.example`** — Minor but violates GOV-008. Filed DEF-001.
-2. **Backend lint broken** — `typescript-eslint` package missing from devDependencies. Filed DEF-002.
+None — all issues resolved.
 
 ---
 
@@ -158,7 +157,7 @@ version: 1.0.0
 
 | Field | Value |
 |:------|:------|
-| **Verdict** | **CONDITIONAL PASS** |
-| **Condition** | DEF-001 + DEF-002 must be resolved. Both are minor fixes. |
-| **Deploy approved** | YES — after both defects fixed |
-| **Defects filed** | DEF-001 (minor), DEF-002 (minor) |
+| **Verdict** | **FULL PASS** ✅ |
+| **Condition** | None — all checks pass |
+| **Deploy approved** | **YES** |
+| **Defects filed** | DEF-001 (CLOSED), DEF-002 (CLOSED) |
