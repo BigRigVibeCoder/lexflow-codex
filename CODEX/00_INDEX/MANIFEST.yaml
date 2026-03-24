@@ -115,6 +115,30 @@ documents:
       Backend Agent: 21 tasks. All adapted for multi-repo + VM deployment.
       Governance compliance mandatory from task 1.
 
+  - id: BCK-002
+    path: 05_PROJECT/BCK-002_ArchitectBacklog.md
+    title: "Architect Agent Backlog"
+    type: planning
+    status: ACTIVE
+    tags: [project-management, backlog, architect, audit, deployment]
+    agents: [architect]
+    summary: >
+      26 architect-specific tasks across 6 phases: infrastructure prep,
+      sprint audits, contract compliance testing, deployments, CODEX
+      maintenance. Runs in parallel with developer sprints.
+
+  - id: SPR-001-ARCH
+    path: 05_PROJECT/SPR-001-ARCH_ArchitectSprint.md
+    title: "Architect Sprint — Parallel with SPR-001"
+    type: sprint
+    status: ACTIVE
+    tags: [sprint, architect, phase-0, infrastructure, audit]
+    agents: [architect]
+    summary: >
+      8 architect tasks during SPR-001: verify prod VM, pre-stage
+      environment, create audit checklist template, health check script,
+      monitor both agents, audit SPR-001 output, deploy v0.1.
+
   - id: SPR-001
     path: 05_PROJECT/SPR-001_FoundationSprint.md
     title: "Foundation Sprint — Project Scaffold & Infrastructure"
