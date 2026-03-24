@@ -6,23 +6,12 @@
 # single file, filter by tags/status/type/agents field, and locate exactly the
 # docs it needs — no directory crawling required.
 #
-# USAGE (agent):
-#   1. Parse this file
-#   2. Filter documents by relevant tags, type, or agents field
-#   3. Read only the docs that match your task
-#
-# USAGE (human with yq):
-#   yq '.documents[] | select(.tags[] == "testing")' MANIFEST.yaml
-#   yq '.documents[] | select(.status == "APPROVED")' MANIFEST.yaml
-#   yq '.documents[] | select(.agents[] == "coder")' MANIFEST.yaml
-#
 # MAINTENANCE: Update this file whenever a doc is created, moved, or archived.
-#   Run: CODEX/_scripts/manifest-gen.sh (when available) to auto-regenerate.
 # ============================================================================
 
 schema_version: "1.0.0"
-project: "agentic-architect-template"
-generated: "2026-03-18"
+project: "lexflow"
+generated: "2026-03-24"
 
 # ── Area Definitions ──────────────────────────────────────────────────────────
 areas:
@@ -41,8 +30,8 @@ areas:
   - number: 20
     name: BLUEPRINTS
     slug: blueprints
-    description: "Component specifications, system designs, API contracts"
-    category_codes: [BLU, API]
+    description: "Component designs, system architecture, API/interface contracts"
+    category_codes: [BLU, CON, API]
 
   - number: 30
     name: RUNBOOKS
@@ -65,7 +54,7 @@ areas:
   - number: 60
     name: EVOLUTION
     slug: evolution
-    description: "Feature specs, enhancement proposals, roadmaps"
+    description: "Feature specs, enhancement proposals, contract change requests"
     category_codes: [EVO, RFC]
 
   - number: 70
@@ -77,7 +66,7 @@ areas:
   - number: 80
     name: AGENTS
     slug: agents
-    description: "Agent role definitions — Architect, Developer, Tester templates"
+    description: "Agent role definitions — Architect, Developer (Frontend/Backend)"
     category_codes: [AGT]
 
   - number: 90
@@ -102,7 +91,41 @@ documents:
       Humans browse here. Agents read MANIFEST.yaml.
 
   # ── 05_PROJECT ─────────────────────────────────────────────────────────────
-  # (empty — add PRJ-, SPR-, BCK- docs as your project starts)
+  - id: PRJ-001
+    path: 05_PROJECT/PRJ-001_Roadmap.md
+    title: "LexFlow Project Roadmap"
+    type: planning
+    status: APPROVED
+    tags: [roadmap, project-management, vision]
+    agents: [all]
+    summary: >
+      Project vision, tech stack (Next.js 15 + Fastify 4 + PostgreSQL 15),
+      7-phase delivery (85 tasks, 8 sprints, est. 3-6 days at AI pace),
+      compliance-from-day-one mandate (GOV-001 through GOV-008).
+
+  - id: BCK-001
+    path: 05_PROJECT/BCK-001_Backlog.md
+    title: "LexFlow Implementation Backlog"
+    type: planning
+    status: ACTIVE
+    tags: [project-management, backlog, sprints]
+    agents: [all]
+    summary: >
+      85 tasks across 7 phases. Frontend Agent: 63 tasks.
+      Backend Agent: 21 tasks. All adapted for multi-repo + VM deployment.
+      Governance compliance mandatory from task 1.
+
+  - id: SPR-001
+    path: 05_PROJECT/SPR-001_FoundationSprint.md
+    title: "Foundation Sprint — Project Scaffold & Infrastructure"
+    type: sprint
+    status: PLANNING
+    tags: [sprint, phase-0, scaffold, infrastructure]
+    agents: [frontend, backend]
+    summary: >
+      Phase 0: 6 tasks. Frontend scaffold (Next.js 15 + health endpoint),
+      Backend scaffold (Fastify 4 + health endpoint), VM provisioning,
+      CI pipeline, deploy scripts. Mandatory GOV compliance table.
 
   # ── 10_GOVERNANCE ───────────────────────────────────────────────────────────
   - id: GOV-001
@@ -113,10 +136,8 @@ documents:
     tags: [documentation, standards, naming, frontmatter, templates, governance]
     agents: [all]
     summary: >
-      NASA/JPL-grade documentation standard. YAML frontmatter, BLUF-first
-      writing, Indexed Decimal folder structure. Enforces change control
-      (NPR 7150.2D), peer review gates, requirements traceability (DO-178C),
-      and formal retention/archival policies.
+      YAML frontmatter, BLUF-first writing, Indexed Decimal folder structure.
+      Enforces change control, peer review gates, requirements traceability.
 
   - id: GOV-002
     path: 10_GOVERNANCE/GOV-002_TestingProtocol.md
@@ -126,9 +147,10 @@ documents:
     tags: [testing, verification, governance, standards, quality]
     agents: [all]
     summary: >
-      NASA/JPL-grade testing protocol. 14 test tiers from static analysis to
-      HIL. Bidirectional requirements traceability, assertion density mandates,
-      MC/DC coverage, forensic artifacts, and fail-fast execution order.
+      17-tier testing cascade: IaC → Static Fortress → Unit → Property →
+      Snapshot → Mutation → Integration → Contract → Fuzz → E2E → DAST →
+      GUI/Visual → Performance → Chaos → Soak → UAT → HIL.
+      Fail-fast execution order, forensic artifacts, traceability matrix.
 
   - id: GOV-003
     path: 10_GOVERNANCE/GOV-003_CodingStandard.md
@@ -138,25 +160,21 @@ documents:
     tags: [coding, standards, governance, quality, safety]
     agents: [all]
     summary: >
-      NASA/JPL-grade polyglot coding standard for Python, C/C++, and
-      React/TypeScript. NASA Power of 10 backbone, MISRA C:2025, DO-178C
-      code review mandates, dead code prohibition, boundary conditions,
-      incident-readability enhancements (inline ADRs, panic breadcrumbs),
-      WCAG 2.1 AA accessibility, data-testid testability, static analysis
-      profiles, and Disaster-Readability Principle.
+      Polyglot coding standard. TypeScript strict mode (§8), NASA Power of 10,
+      30-second rule, disaster-readability, JSDoc/TSDoc, data-testid,
+      WCAG 2.1 AA, assertion density, complexity limits.
 
   - id: GOV-004
     path: 10_GOVERNANCE/GOV-004_ErrorHandlingProtocol.md
     title: "Error Handling Protocol"
     type: reference
     status: APPROVED
-    tags: [coding, standards, governance, quality, safety]
+    tags: [error-handling, standards, governance, quality, safety]
     agents: [all]
     summary: >
-      NASA/JPL-grade zero-dark-failure error handling. 13-category taxonomy,
-      severity levels with DAL mapping (DO-178C), structured error context,
-      crash artifacts, circuit breakers, correlation IDs, FMEA requirements,
-      and mandatory post-incident review.
+      Zero-dark-failure error handling. 13-category taxonomy, severity levels,
+      structured error context, circuit breakers, correlation IDs, crash
+      artifacts, and mandatory post-incident review.
 
   - id: GOV-005
     path: 10_GOVERNANCE/GOV-005_AgenticDevelopmentLifecycle.md
@@ -166,23 +184,21 @@ documents:
     tags: [governance, standards, project-management, workflow]
     agents: [all]
     summary: >
-      Project lifecycle for human-Architect + AI-agent teams. Replaces
-      traditional Agile with scope-bounded sprints, emergent work items,
-      one-agent-per-branch, natural checkpoints, and human-in-the-loop
-      merge/deploy.
+      Project lifecycle for AI-agent teams. Scope-bounded sprints, emergent
+      work items, one-agent-per-branch, checkpoints, human-in-the-loop
+      merge/deploy. The Agentic Loop: Conversation → Spec → Sprint →
+      Verification → Merge → Deploy.
 
   - id: GOV-006
     path: 10_GOVERNANCE/GOV-006_LoggingSpecification.md
     title: "Logging Specification"
     type: reference
     status: APPROVED
-    tags: [coding, standards, governance, quality, safety]
+    tags: [logging, standards, governance, quality, observability]
     agents: [all]
     summary: >
-      NASA/JPL-grade structured logging for Python, TypeScript, and C++.
-      Trace-first design for agent execution reconstruction. Database and
-      flat-file storage, forensic query patterns, correlation IDs, and
-      retention policies.
+      Structured JSON logging via pino. Trace-first design, correlation IDs,
+      forensic query patterns, retention policies.
 
   - id: GOV-007
     path: 10_GOVERNANCE/GOV-007_AgenticProjectManagement.md
@@ -192,49 +208,75 @@ documents:
     tags: [governance, standards, project-management, workflow, agentic-development]
     agents: [all]
     summary: >
-      Defines CODEX as the Markdown OS for project management. Covers the
-      three-tier hierarchy (Human → Architect → Developer/Tester), document
-      taxonomy (PRJ/SPR/BLU/CON/DEF/AGT), sprint lifecycle, discrepancy
-      resolution protocol, and agent reading order.
+      CODEX as Markdown PM OS. Three-tier hierarchy (Human → Architect →
+      Developer/Tester). Document taxonomy, sprint lifecycle, discrepancy
+      resolution, agent reading order.
 
-  # ── 20_BLUEPRINTS ──────────────────────────────────────────────────────────
-  - id: BLU-020
-    path: 20_BLUEPRINTS/BLU-020_CODEX_System_Blueprint.md
-    title: "CODEX System Blueprint"
-    type: explanation
-    status: DRAFT
-    tags: [governance, documentation, standards, architecture, workflow]
+  - id: GOV-008
+    path: 10_GOVERNANCE/GOV-008_InfrastructureAndOperations.md
+    title: "Infrastructure & Operations Standard"
+    type: reference
+    status: APPROVED
+    tags: [governance, infrastructure, deployment, multi-repo, vm, operations]
     agents: [all]
     summary: >
-      Explains how the CODEX documentation engine works — dual-audience design,
-      area architecture, three discovery mechanisms (MANIFEST, TAG_TAXONOMY,
-      README), governance stack, compliance workflows, and DarkGravity swarm
-      integration. Template orientation doc.
+      LexFlow infrastructure decisions. Multi-repo with CODEX submodule,
+      GCP VM deployment (PM2/nginx, not Cloud Run), contract-first shared
+      types, local disk file storage, AI-agent pace development,
+      agent communication protocol.
 
-  # ── 30_RUNBOOKS ────────────────────────────────────────────────────────────
-  - id: RUN-DG-001
-    path: 30_RUNBOOKS/RUN-DG-001_DarkGravity_Setup_Recovery.md
-    title: "DarkGravity Setup & Recovery Guide"
-    type: how-to
+  # ── 20_BLUEPRINTS ──────────────────────────────────────────────────────────
+  - id: BLU-ARCH-001
+    path: 20_BLUEPRINTS/BLU-ARCH-001_LexFlow_Architecture.md
+    title: "LexFlow Architecture Specification"
+    type: blueprint
     status: APPROVED
-    tags: [darkgravity, setup, recovery, workflow]
-    agents: [coder, researcher, architect]
+    tags: [architecture, design, lexflow, trust-accounting, matter-management]
+    agents: [all]
     summary: >
-      Install, configure, and recover the DarkGravity multi-agent swarm engine.
-      Covers fresh install, auto-discovery via resolve_darkgravity.sh,
-      API key setup, troubleshooting, and nuclear recovery.
+      Full architecture specification generated by DarkGravity architect swarm.
+      221K, 4947 lines. Covers auth/RBAC, matter management, trust accounting
+      (IOLTA), document management, time/billing. Source for task backlog.
 
-  # ── 40_VERIFICATION ────────────────────────────────────────────────────────
-  # (empty — add project-specific verification docs here)
+  - id: CON-001
+    path: 20_BLUEPRINTS/CON-001_TrustWebServiceContract.md
+    title: "Trust ↔ Web Service Communication Contract"
+    type: contract
+    status: APPROVED
+    tags: [contract, api, trust-service, inter-service]
+    agents: [frontend, backend]
+    summary: >
+      Communication contract between Trust Service (Fastify :4000) and Web
+      Service (Next.js :3000). Localhost HTTP, shared-secret auth, circuit
+      breaker config, all trust client methods mapped to HTTP routes,
+      validate-matter-client callback, shared TypeScript types.
 
-  # ── 50_DEFECTS ─────────────────────────────────────────────────────────────
-  # (empty — add project-specific defect reports here)
-
-  # ── 60_EVOLUTION ───────────────────────────────────────────────────────────
-  # (empty — add project-specific evolution docs here)
+  - id: CON-002
+    path: 20_BLUEPRINTS/CON-002_TrustServiceHTTPAPI.md
+    title: "Trust Service HTTP API Contract"
+    type: contract
+    status: APPROVED
+    tags: [contract, api, trust-service, http, iolta]
+    agents: [backend, frontend]
+    summary: >
+      Complete HTTP API spec for Trust Accounting Service. 17 routes with
+      full TypeScript request/response schemas, error codes, validation rules.
+      Covers accounts, ledgers, transactions (deposit/disburse/transfer/void),
+      bank reconciliation, three-way report. Compliance requirements from
+      GOV-002/003/004/006.
 
   # ── 70_RESEARCH ────────────────────────────────────────────────────────────
-  # (empty — add project-specific research docs here)
+  - id: RES-002
+    path: 70_RESEARCH/RES-002_DarkGravity_Research.md
+    title: "LexFlow Competitive Analysis & Research Brief"
+    type: research
+    status: APPROVED
+    tags: [research, competitive-analysis, legal-tech, clio]
+    agents: [all]
+    summary: >
+      DarkGravity research swarm output. Deep competitive analysis of Clio
+      and legal practice management landscape. 99K. Used as input to
+      architecture swarm.
 
   # ── 80_AGENTS ──────────────────────────────────────────────────────────────
   - id: AGT-001
@@ -242,33 +284,56 @@ documents:
     title: "Architect Agent — Role Definition"
     type: reference
     status: APPROVED
-    tags: [governance, agent-instructions, project-management, agentic-development, workflow]
+    tags: [governance, agent-instructions, project-management, agentic-development]
     agents: [architect]
     summary: >
-      Defines the Architect Agent role: owns CODEX, manages Developer and Tester
-      agents, audits code against contracts, resolves discrepancies with Human.
-      Does not write feature code. Includes reading order and primary workflows.
+      Defines the Architect Agent role: owns CODEX, manages Developer agents,
+      audits code against contracts, resolves discrepancies with Human.
 
   - id: AGT-002
     path: 80_AGENTS/AGT-002_Developer_Agent.md
-    title: "Developer Agent — Role Definition"
+    title: "Developer Agent — Generic Role Definition"
     type: reference
     status: APPROVED
-    tags: [governance, agent-instructions, project-management, agentic-development, coding]
-    agents: [coder]
+    tags: [governance, agent-instructions, agentic-development, coding]
+    agents: [frontend, backend]
     summary: >
-      Defines the Developer Agent role: executes sprint tasks against blueprints
-      and contracts, proposes contract changes via EVO- docs, reports blockers
-      upstream. Technology-stack agnostic.
+      Generic developer agent template. Technology-stack agnostic.
+      Base protocol for AGT-002-FE and AGT-003-BE.
+
+  - id: AGT-002-FE
+    path: 80_AGENTS/AGT-002-FE_Frontend_Developer.md
+    title: "Frontend Developer Agent — LexFlow"
+    type: reference
+    status: APPROVED
+    tags: [agent-instructions, frontend, nextjs, lexflow]
+    agents: [frontend]
+    summary: >
+      LexFlow-specific frontend boot doc. VM: lexflow-architect,
+      Repo: lexflow-frontend, Stack: Next.js 15/tRPC/NextAuth/Drizzle/Tailwind.
+      9-step CODEX reading order, binding contracts (CON-001, CON-002),
+      database ownership (lexflow_main), governance compliance checklist.
+
+  - id: AGT-003-BE
+    path: 80_AGENTS/AGT-003-BE_Backend_Developer.md
+    title: "Backend Developer Agent — LexFlow"
+    type: reference
+    status: APPROVED
+    tags: [agent-instructions, backend, fastify, trust-accounting, lexflow]
+    agents: [backend]
+    summary: >
+      LexFlow-specific backend boot doc. VM: lexflow-backend,
+      Repo: lexflow-backend, Stack: Fastify 4/Drizzle/TypeBox.
+      9-step reading order, CON-002 binding (17 routes listed),
+      ledger engine details, advisory locks, immutability rules.
 
   - id: AGT-003
     path: 80_AGENTS/AGT-003_Tester_Agent.md
     title: "Tester Agent — Role Definition"
     type: reference
     status: APPROVED
-    tags: [governance, agent-instructions, project-management, agentic-development, testing, verification]
+    tags: [governance, agent-instructions, agentic-development, testing, verification]
     agents: [tester]
     summary: >
       Defines the Tester Agent role: independently verifies developer output
-      against contracts, files DEF- defect reports to Architect, issues
-      pass/fail verdicts for sprint closure. No direct communication with Developer.
+      against contracts, files DEF- defect reports to Architect.

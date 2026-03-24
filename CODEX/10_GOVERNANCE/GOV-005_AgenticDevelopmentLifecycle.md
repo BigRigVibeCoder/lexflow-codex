@@ -121,6 +121,7 @@ A sprint is **scope-bounded, not time-bounded.** It runs until the spec is imple
 | Branch Type | Naming Convention | Purpose |
 |:------------|:-----------------|:--------|
 | Feature | `feat/EVO-NNN-short-description` | Implement a new feature |
+| Sprint Task | `feature/SPR-NNN-TXXX-short-description` | Implement a sprint task |
 | Bug Fix | `fix/DEF-NNN-short-description` | Fix a defect |
 | Research | `research/RES-NNN-short-description` | Investigate and document findings |
 | Test Cycle | `test/VER-NNN-short-description` | Dedicated testing sprint |
