@@ -27,11 +27,11 @@ fi
 FAILED=0
 
 # -----------------------------------------------------------------------------
-# 1. Frontmatter Tag Check for CODEX Governance Documents
+# 1. Frontmatter Tag Check for ALL CODEX Documents
 # -----------------------------------------------------------------------------
-# Enforce that all GOV docs have a 'tags:' section in their YAML frontmatter.
+# Enforce that all CODEX docs have required frontmatter fields.
 for file in $STAGED_FILES; do
-    if [[ "$file" == CODEX/10_GOVERNANCE/GOV-*.md ]]; then
+    if [[ "$file" == CODEX/*/[A-Z]*.md ]] && [[ "$file" != CODEX/_templates/* ]] && [[ "$file" != */README.md ]]; then
         if ! grep -q "^tags:" "$file"; then
             echo -e "${RED}❌ COMPLIANCE FAILURE: $file is missing the 'tags:' frontmatter array.${NC}"
             FAILED=1
@@ -39,8 +39,13 @@ for file in $STAGED_FILES; do
             echo -e "${GREEN}✓ $file contains required tag taxonomy formatting.${NC}"
         fi
         
-        if ! grep -q "^governance_level:" "$file" && ! grep -q "status:" "$file"; then
-            echo -e "${RED}❌ COMPLIANCE FAILURE: $file is missing a required 'status:' or 'governance_level:' field.${NC}"
+        if ! grep -q "^status:" "$file"; then
+            echo -e "${RED}❌ COMPLIANCE FAILURE: $file is missing a required 'status:' field.${NC}"
+            FAILED=1
+        fi
+
+        if ! grep -q "^id:" "$file"; then
+            echo -e "${RED}❌ COMPLIANCE FAILURE: $file is missing a required 'id:' field.${NC}"
             FAILED=1
         fi
     fi

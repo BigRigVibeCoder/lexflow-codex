@@ -12,86 +12,90 @@ updated: YYYY-MM-DD
 version: 1.0.0
 ---
 
-> **BLUF:** Sprint [NNN] targets [goal in one sentence]. [N] tasks assigned to [Developer/Tester Agent]. Estimated completion: [timeframe or "scope-bounded"].
+> **BLUF:** Sprint [NNN] targets [goal in one sentence]. [N] tasks assigned to [Developer/Tester Agent]. Estimated completion: [timeframe or "scope-bounded"]. **Governance compliance is mandatory from task one.**
 
 # Sprint [NNN]: [Title]
 
-**Status:** `PLANNING` | `ACTIVE` | `REVIEW` | `BLOCKED` | `CLOSED`
-**Assigned to:** [Agent name or "unassigned"]
-**Opened:** YYYY-MM-DD
-**Closed:** —
-**Refs:** [EVO-NNN or PRJ-NNN that spawned this sprint]
+**Phase:** [Phase number and name]
+**Target:** [timeframe] (AI-agent pace)
+**Agent(s):** [Frontend / Backend / Both]
+**Dependencies:** [Previous sprint(s) that must be complete]
+**Contracts:** [CON-NNN — binding contracts for this sprint]
 
 ---
 
-## Objective
+## ⚠️ Mandatory Compliance — Every Task
 
-[One paragraph. What does "done" look like for this sprint? What user value or system capability does it deliver?]
+> All tasks in this sprint MUST incorporate these governance standards. They are not optional and not deferred.
 
----
+| Governance Doc | Sprint Requirement |
+|:---------------|:-------------------|
+| **GOV-001** | [specific doc requirement for this sprint] |
+| **GOV-002** | [specific testing requirement] |
+| **GOV-003** | [specific coding standard requirement] |
+| **GOV-004** | [specific error handling requirement] |
+| **GOV-005** | Branch: `feature/SPR-NNN-TXXX-description`. Commit: `feat(SPR-NNN): description`. |
+| **GOV-006** | [specific logging requirement] |
+| **GOV-007** | Task status updated. Blockers → `DEF-` doc. |
+| **GOV-008** | [specific infra requirement] |
 
-## Context
-
-[Brief background. What triggered this sprint? What contracts or blueprints does it implement? Link them.]
-
-- **Blueprint:** [BLU-NNN — title]
-- **Contracts:** [CON-NNN — title]
-- **Parent feature:** [EVO-NNN — title]
-
----
-
-## Task List
-
-> Update status as work progresses. The Architect audits output after all tasks reach `DONE`.
-
-| # | Task | Assigned Agent | Status | Notes |
-|:--|:-----|:--------------|:-------|:------|
-| 1 | [Task description] | Developer | `TODO` | [ref: CON-NNN §X] |
-| 2 | [Task description] | Developer | `TODO` | |
-| 3 | Write unit tests for task 1 | Developer | `TODO` | per GOV-002 |
-| 4 | Verification pass | Tester | `TODO` | ref: VER-NNN |
-
-**Status legend:** `TODO` → `IN_PROGRESS` → `DONE` → `BLOCKED`
+**Acceptance gate:** No task is considered complete unless ALL applicable governance requirements are met.
 
 ---
 
-## Acceptance Criteria
+## [Agent Name] Tasks
 
-The sprint is CLOSED only when ALL of the following are true:
+### T-NNN: [Task Title]
+- **Branch:** `feature/SPR-NNN-TNNN-[short-description]`
+- **Dependencies:** [T-NNN or None]
+- **Contracts:** [CON-NNN §section or None]
+- **Blueprints:** [BLU-NNN §section or None]
+- **Deliverable:**
+  - [Specific deliverable 1]
+  - [Specific deliverable 2]
+- **Acceptance criteria:**
+  - [Specific, testable criterion 1]
+  - [Specific, testable criterion 2]
+- **Status:** [ ] Not Started
 
-- [ ] All tasks above reach `DONE`
-- [ ] Test coverage meets `GOV-002` thresholds (≥80% line coverage)
-- [ ] All output validates against referenced `CON-` contracts
-- [ ] No open `DEF-` reports filed against this sprint
-- [ ] Architect audit complete and signed off
-- [ ] `VER-NNN.md` filed by Tester Agent with PASS verdict
+### T-NNN: [Next Task]
+- **Branch:** `feature/SPR-NNN-TNNN-[short-description]`
+- **Dependencies:** [T-NNN]
+- **Deliverable:** [description]
+- **Acceptance criteria:** [criteria]
+- **Status:** [ ] Not Started
+
+---
+
+## Sprint Checklist
+
+| Task | Agent | Status | Branch | Audited |
+|:-----|:------|:-------|:-------|:--------|
+| T-NNN | [Agent] | [ ] | `feature/SPR-NNN-TNNN-description` | [ ] |
 
 ---
 
 ## Blockers
 
-| # | Blocker | Filed by | Status |
-|:--|:--------|:---------|:-------|
-| — | None | — | — |
+| # | Blocker | Filed by | DEF/EVO ID | Status |
+|:--|:--------|:---------|:-----------|:-------|
+| — | None | — | — | — |
 
 ---
 
-## Defects Filed Against This Sprint
+## Sprint Completion Criteria
 
-| DEF ID | Summary | Status |
-|:-------|:--------|:-------|
-| — | None | — |
+- [ ] All tasks pass acceptance criteria
+- [ ] All GOV compliance checks pass (Architect audit)
+- [ ] All tests pass: `npm run lint && npm run typecheck && npm run test`
+- [ ] Architect audit complete (VER-001 checklist)
+- [ ] No open `DEF-` reports against this sprint
 
 ---
 
 ## Audit Notes (Architect)
 
-[Architect fills this in during §4.2 of GOV-007 audit workflow.]
+[Architect fills this in during audit.]
 
----
-
-## Close Notes
-
-**Closed:** YYYY-MM-DD
 **Verdict:** PASS / FAIL
-**Moved to:** `90_ARCHIVE/`
+**Deploy approved:** YES / NO

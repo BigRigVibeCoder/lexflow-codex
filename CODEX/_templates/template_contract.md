@@ -77,6 +77,34 @@ version: 1.0.0
 }
 ```
 
+### 3.4 TypeScript Schema (if applicable)
+
+> If the project uses TypeScript, provide exact type definitions. Both producer and consumer agents generate their own code from these types — they are the single source of truth.
+
+```typescript
+// Request
+interface ExampleRequest {
+  fieldName: string;
+  optionalField?: number;
+}
+
+// Response
+interface ExampleResponse {
+  id: string;
+  fieldName: string;
+  createdAt: string; // ISO 8601
+}
+
+// Error (per GOV-004)
+interface ErrorResponse {
+  error: {
+    code: string;    // e.g., "VALIDATION_ERROR"
+    message: string;
+    details?: Record<string, string>;
+  };
+}
+```
+
 ---
 
 ## 4. Error Behavior

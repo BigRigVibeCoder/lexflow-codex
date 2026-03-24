@@ -85,6 +85,16 @@ development:
     description: "Prioritized product/feature backlog managed by Architect Agent"
   - tag: contract
     description: "Interface contract — binding rules for how components communicate"
+  - tag: multi-repo
+    description: "Multi-repository project structure with CODEX submodule"
+  - tag: integration-testing
+    description: "Cross-service integration testing, contract compliance testing"
+  - tag: lessons-learned
+    description: "Documented improvements from real-world project experience"
+  - tag: project-specific
+    description: "Project-specific agent configuration or documentation"
+  - tag: audit
+    description: "Sprint audit, compliance audit, governance verification"
 
 # ── Testing & Verification ────────────────────────────────────────────────────
 testing:
