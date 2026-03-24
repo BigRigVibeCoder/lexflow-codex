@@ -1,0 +1,121 @@
+# ==============================================================================
+# docker-compose.yml — LexFlow Production Stack
+#
+# Services: postgres, lexflow-trust, lexflow-web, nginx
+# OWNER: Architect Agent (GOV-008 §3.4)
+# REF: SPR-002-ARCH D-003
+#
+# Usage:
+#   docker compose up -d              # Start all services
+#   docker compose logs -f            # Follow logs
+#   docker compose down               # Stop all
+#   docker compose down -v            # Stop + delete volumes (⚠️ data loss)
+# ==============================================================================
+
+services:
+  # --- PostgreSQL 16 ---
+  postgres:
+    image: postgres:16-alpine
+    container_name: lexflow-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: lexflow
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-lexflow_dev_password}
+      POSTGRES_DB: lexflow_trust
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+    ports:
+      - "127.0.0.1:5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lexflow -d lexflow_trust"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - lexflow-internal
+
+  # --- Trust Service (Fastify 4) ---
+  lexflow-trust:
+    build:
+      context: ../lexflow-backend
+      dockerfile: Dockerfile
+    container_name: lexflow-trust
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: "4000"
+      SERVICE_NAME: lexflow-trust
+      LOG_LEVEL: info
+      DATABASE_URL: postgresql://lexflow:${POSTGRES_PASSWORD:-lexflow_dev_password}@postgres:5432/lexflow_trust
+      INTERNAL_SERVICE_KEY: ${INTERNAL_SERVICE_KEY:-lexflow-internal-key}
+    networks:
+      - lexflow-internal
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:4000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # --- Web Service (Next.js 15) ---
+  lexflow-web:
+    build:
+      context: ../lexflow-frontend
+      dockerfile: Dockerfile
+    container_name: lexflow-web
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      lexflow-trust:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      SERVICE_NAME: lexflow-web
+      LOG_LEVEL: info
+      DATABASE_URL: postgresql://lexflow:${POSTGRES_PASSWORD:-lexflow_dev_password}@postgres:5432/lexflow_web
+      TRUST_SERVICE_URL: http://lexflow-trust:4000
+      INTERNAL_SERVICE_KEY: ${INTERNAL_SERVICE_KEY:-lexflow-internal-key}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-change-me-in-production}
+      NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000}
+    networks:
+      - lexflow-internal
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  # --- nginx Reverse Proxy ---
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: lexflow-nginx
+    restart: unless-stopped
+    depends_on:
+      lexflow-web:
+        condition: service_healthy
+      lexflow-trust:
+        condition: service_healthy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./certs:/etc/nginx/certs:ro
+    networks:
+      - lexflow-internal
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  lexflow-internal:
+    driver: bridge
