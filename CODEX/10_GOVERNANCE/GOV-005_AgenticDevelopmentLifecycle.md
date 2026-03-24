@@ -116,24 +116,42 @@ A sprint is **scope-bounded, not time-bounded.** It runs until the spec is imple
 
 ### 5.1 Branch Strategy
 
-**One agent, one branch, one purpose.**
+**One agent, one branch per sprint. Granular commits, not granular branches.**
 
-| Branch Type | Naming Convention | Purpose |
-|:------------|:-----------------|:--------|
-| Feature | `feat/EVO-NNN-short-description` | Implement a new feature |
-| Sprint Task | `feature/SPR-NNN-TXXX-short-description` | Implement a sprint task |
-| Bug Fix | `fix/DEF-NNN-short-description` | Fix a defect |
-| Research | `research/RES-NNN-short-description` | Investigate and document findings |
-| Test Cycle | `test/VER-NNN-short-description` | Dedicated testing sprint |
-| Deploy | `deploy/vX.Y.Z` | Deployment preparation |
-| Hotfix | `hotfix/DEF-NNN-short-description` | Emergency fix to production |
+> [!IMPORTANT]
+> Do NOT create a separate branch per task within a sprint. Tasks within a sprint
+> are tightly coupled — separate branches add merge complexity without review value.
+
+#### Branch Naming
+
+| Scenario | Naming Convention | Example |
+|:---------|:-----------------|:--------|
+| **Single-agent sprint** | `feature/SPR-NNN-short-description` | `feature/SPR-004-trust-accounting` |
+| **Multi-agent sprint** (per agent) | `feature/SPR-NNN-agent-short-desc` | `feature/SPR-005-frontend-trust-ui` |
+| Bug Fix | `fix/DEF-NNN-short-description` | `fix/DEF-003-missing-tests` |
+| Hotfix | `hotfix/DEF-NNN-short-description` | `hotfix/DEF-010-auth-bypass` |
+| Deploy | `deploy/vX.Y.Z` | `deploy/v0.2.0` |
+
+#### Commit Granularity (within the branch)
+
+Each task gets its own commit. This gives you task-level traceability via `git log`:
+
+```
+feat(SPR-004): T-034 trust schema + migration
+feat(SPR-004): T-038 ledger engine with advisory locks
+feat(SPR-004): T-040 deposit route
+feat(SPR-004): T-041 disburse route
+test(SPR-004): unit tests for all routes and ledger engine
+```
 
 ### 5.2 Branch Rules
 
-1. **Branch from `main`** (or `master`) — always start from the latest stable.
+1. **Branch from `main`** — always start from the latest stable.
 2. **One agent per branch** — no two agents working on the same branch.
-3. **Branch names include the CODEX ID** — traceability from branch to spec.
-4. **Short-lived branches** — merge or close within the sprint. No stale branches.
+3. **One branch per sprint per agent** — do NOT create per-task branches.
+4. **Branch names include the sprint ID** — traceability from branch to spec.
+5. **Short-lived branches** — merge or close within the sprint. No stale branches.
+6. **Delete after merge** — the Architect deletes feature branches after auditing and merging. No branch accumulation.
 5. **Commit messages** follow this format (optimized for agent readability):
 
 ```

@@ -228,7 +228,7 @@ Before marking ANY task complete, verify ALL of the following:
 - [ ] **GOV-001**: JSDoc/TSDoc on all exports, README updated
 - [ ] **GOV-003**: TypeScript strict, ESLint 0 errors, no `any`, complexity ≤10
 - [ ] **GOV-004**: All errors use `ApplicationError` + `ErrorCategory`, structured responses
-- [ ] **GOV-005**: Branch `feature/SPR-NNN-TXXX-*`, commits `feat(SPR-NNN): desc`
+- [ ] **GOV-005**: Branch `feature/SPR-NNN-description` (one per sprint), commits `feat(SPR-NNN): T-XXX desc`
 - [ ] **GOV-006**: pino structured JSON logging, correlation IDs, transactions logged with amounts
 - [ ] **GOV-008**: `.env.example` updated if new env vars added
 
