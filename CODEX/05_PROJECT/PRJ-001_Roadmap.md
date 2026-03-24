@@ -8,8 +8,8 @@ agents: [all]
 tags: [roadmap, project-management, vision]
 related: [BCK-001, GOV-007, GOV-008, BLU-ARCH-001, RES-002]
 created: 2026-03-22
-updated: 2026-03-22
-version: 1.0.0
+updated: 2026-03-24
+version: 1.1.0
 ---
 
 > **BLUF:** LexFlow is a single-tenant personal injury practice management system replacing Clio. Built by AI agents at machine speed. Target: production-ready in under a week.
@@ -99,10 +99,10 @@ Every sprint task is governed by:
 ## 7. Success Criteria
 
 - [ ] All 85 tasks complete and Architect-audited
-- [ ] Both services running on `lexflow-prod` VM
+- [x] Both services running on `lexflow-prod` VM
 - [ ] Full matter lifecycle works (create → manage → close)
-- [ ] Trust accounting with three-way reconciliation balanced
-- [ ] Document upload/download/viewing functional
+- [/] Trust accounting with three-way reconciliation balanced
+- [x] Document upload/download/viewing functional
 - [ ] Time tracking and invoicing operational
-- [ ] MFA-protected login with RBAC enforcement
+- [x] MFA-protected login with RBAC enforcement
 - [ ] All GOV-002 testing tiers 1-12 passing

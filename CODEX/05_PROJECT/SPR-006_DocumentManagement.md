@@ -2,7 +2,7 @@
 id: SPR-006
 title: "Document Management Sprint"
 type: sprint
-status: PLANNING
+status: COMPLETE
 owner: architect
 agents: [frontend]
 tags: [sprint, phase-4, documents, upload, local-storage]

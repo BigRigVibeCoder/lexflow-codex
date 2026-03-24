@@ -2,7 +2,7 @@
 id: SPR-008
 title: "Polish & Hardening Sprint"
 type: sprint
-status: PLANNING
+status: ACTIVE
 owner: architect
 agents: [frontend, backend]
 tags: [sprint, phase-6, security, testing, production, hardening]

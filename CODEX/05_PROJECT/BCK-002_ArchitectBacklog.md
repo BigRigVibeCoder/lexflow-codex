@@ -9,7 +9,7 @@ tags: [project-management, backlog, architect, audit, deployment]
 related: [BCK-001, GOV-007, GOV-008]
 created: 2026-03-24
 updated: 2026-03-24
-version: 1.0.0
+version: 2.0.0
 ---
 
 > **BLUF:** The Architect Agent has its own work stream separate from developer sprints. This backlog tracks: infrastructure prep, sprint audits, contract compliance testing, deployment execution, CODEX maintenance, and production operations. The Architect works **in parallel** with developer agents — never idle.
@@ -51,7 +51,7 @@ version: 1.0.0
 | ID | Task | Category | Dependencies | Deliverable | Status |
 |:---|:-----|:---------|:-------------|:------------|:-------|
 | A-009 | SPR-002 Architect Audit | ARCH-AUDIT | SPR-002 complete | Audit auth system against GOV-003/004. Test RBAC. | [x] |
-| A-010 | Deploy auth to prod (v0.2) | ARCH-DEPLOY | A-009 passes | Run migrations, restart web service | [ ] |
+| A-010 | Deploy auth to prod (v0.2) | ARCH-DEPLOY | A-009 passes | Run migrations, restart web service | [x] |
 | A-011 | Create SPR-002 → SPR-004 handoff note | ARCH-CODEX | SPR-002 complete | Update backend agent: "Frontend auth is live, you can test validate-matter-client callback" | [x] |
 
 ---
@@ -62,8 +62,8 @@ version: 1.0.0
 |:---|:-----|:---------|:-------------|:------------|:-------|
 | A-012 | SPR-003 Architect Audit | ARCH-AUDIT | SPR-003 complete | Audit matter management. Test matter creation wizard. | [x] |
 | A-013 | SPR-004 Architect Audit | ARCH-AUDIT | SPR-004 complete | **Critical:** audit all 17 CON-002 routes. TypeBox schemas match contract. | [x] |
-| A-014 | Deploy matter mgmt to prod (v0.3) | ARCH-DEPLOY | A-012 passes | Run migrations, restart web service | [ ] |
-| A-015 | Deploy trust service to prod | ARCH-DEPLOY | A-013 passes | Run trust migrations, start trust service on port 4000 | [ ] |
+| A-014 | Deploy matter mgmt to prod (v0.3) | ARCH-DEPLOY | A-012 passes | Run migrations, restart web service | [x] |
+| A-015 | Deploy trust service to prod | ARCH-DEPLOY | A-013 passes | Run trust migrations, start trust service on port 4000 | [x] |
 
 ---
 
@@ -71,9 +71,9 @@ version: 1.0.0
 
 | ID | Task | Category | Dependencies | Deliverable | Status |
 |:---|:-----|:---------|:-------------|:------------|:-------|
-| A-016 | **Cross-service contract compliance test** | ARCH-INTEG | SPR-004 + SPR-005 | Run both services. Verify FE trust-client calls match BE routes per CON-002. | [ ] |
-| A-017 | First E2E integration test | ARCH-INTEG | A-016 passes | Login → create matter → create trust account → deposit → verify balance | [ ] |
-| A-018 | Deploy integrated system (v0.4) | ARCH-DEPLOY | A-017 passes | Both services running on prod, communicating | [ ] |
+| A-016 | **Cross-service contract compliance test** | ARCH-INTEG | SPR-004 + SPR-005 | Run both services. Verify FE trust-client calls match BE routes per CON-002. | [x] |
+| A-017 | First E2E integration test | ARCH-INTEG | A-016 passes | Login → create matter → create trust account → deposit → verify balance | [/] |
+| A-018 | Deploy integrated system (v0.4) | ARCH-DEPLOY | A-017 passes | Both services running on prod, communicating | [x] |
 
 ---
 
@@ -82,9 +82,9 @@ version: 1.0.0
 | ID | Task | Category | Dependencies | Deliverable | Status |
 |:---|:-----|:---------|:-------------|:------------|:-------|
 | A-019 | Ensure `/var/lexflow/documents/` exists on prod | ARCH-INFRA | A-018 | Directory with correct permissions | [ ] |
-| A-020 | SPR-006 Audit | ARCH-AUDIT | SPR-006 complete | Audit document management. Test upload/download. | [ ] |
+| A-020 | SPR-006 Audit | ARCH-AUDIT | SPR-006 complete | Audit document management. Test upload/download. | [x] |
 | A-021 | SPR-007 Audit | ARCH-AUDIT | SPR-007 complete | Audit billing. Verify trust transfer integration. | [ ] |
-| A-022 | Deploy docs + billing (v0.5) | ARCH-DEPLOY | A-020, A-021 | Full feature deployment | [ ] |
+| A-022 | Deploy docs + billing (v0.5) | ARCH-DEPLOY | A-020, A-021 | Full feature deployment | [/] |
 
 ---
 
@@ -92,8 +92,9 @@ version: 1.0.0
 
 | ID | Task | Category | Dependencies | Deliverable | Status |
 |:---|:-----|:---------|:-------------|:------------|:-------|
-| A-023 | SPR-008 Audit | ARCH-AUDIT | SPR-008 complete | Final audit: all GOV docs, E2E suite, performance | [ ] |
-| A-024 | Production go-live (v1.0) | ARCH-DEPLOY | A-023 passes | TLS active, monitoring live, backups running | [ ] |
+| A-023 | SPR-008 Backend Audit | ARCH-AUDIT | SPR-008 BE complete | Audit backend hardening: coverage gate, deploy scripts, backup/restore | [x] |
+| A-023b | SPR-008 Frontend Audit | ARCH-AUDIT | SPR-008 FE complete | Audit frontend hardening tasks | [ ] |
+| A-024 | Production go-live (v1.0) | ARCH-DEPLOY | A-023 passes | TLS active, monitoring live, backups running | [/] |
 | A-025 | Archive all sprint docs | ARCH-CODEX | A-024 | Move SPR-001→008 to 90_ARCHIVE. Update MANIFEST. | [ ] |
 | A-026 | Final CODEX reconciliation | ARCH-CODEX | A-025 | Verify all docs current, MANIFEST accurate, TAG_TAXONOMY updated | [ ] |
 
