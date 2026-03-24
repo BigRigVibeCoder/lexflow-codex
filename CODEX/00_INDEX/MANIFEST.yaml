@@ -167,38 +167,37 @@ documents:
     path: 05_PROJECT/SPR-002_AuthRBAC.md
     title: "Authentication & RBAC Sprint"
     type: sprint
-    status: ACTIVE
+    status: COMPLETE
     tags: [sprint, phase-1, auth, rbac, mfa]
     agents: [frontend]
     summary: >
-      Phase 1: 11 tasks. NextAuth.js credentials + JWT, RBAC permission
-      matrix, TOTP MFA with recovery codes, audit logging middleware,
-      tRPC auth middleware, login/dashboard/MFA/user management UI.
-      Backend Agent idle — may start trust schema early.
+      Phase 1 COMPLETE: 11 tasks. NextAuth.js credentials + JWT, RBAC permission
+      matrix, TOTP MFA, audit logging, tRPC auth middleware, login/dashboard/MFA/
+      user management UI. 46 tests, 23 files. VER-003 FULL PASS.
 
   - id: SPR-003
     path: 05_PROJECT/SPR-003_MatterManagement.md
     title: "Matter Management Sprint"
     type: sprint
-    status: PLANNING
+    status: ACTIVE
     tags: [sprint, phase-2, matter-management, clients, contacts]
     agents: [frontend]
     summary: >
       Phase 2: 16 tasks. Client/matter/contact schemas, tRPC routers,
       creation wizard, SOL deadline tracking, medical treatments,
-      dashboard widgets. Trust tab placeholder.
+      dashboard widgets. Frontend agent executing.
 
   - id: SPR-004
     path: 05_PROJECT/SPR-004_TrustAccountingBackend.md
     title: "Trust Accounting Backend Sprint"
     type: sprint
-    status: ACTIVE
+    status: COMPLETE
     tags: [sprint, phase-3, trust-accounting, iolta, ledger, backend]
     agents: [backend]
     summary: >
-      Phase 3 Backend: 14 tasks. All 17 CON-002 routes. Ledger engine
+      Phase 3 Backend COMPLETE: 14 tasks. All 17 CON-002 routes. Ledger engine
       with advisory locks, SERIALIZABLE isolation, immutable journal entries.
-      Bank statement import, three-way reconciliation.
+      63 tests, 5 files. VER-002 FULL PASS.
 
   - id: SPR-005
     path: 05_PROJECT/SPR-005_TrustAccountingFrontend.md
@@ -307,9 +306,9 @@ documents:
     agents: [all]
     summary: >
       Project lifecycle for AI-agent teams. Scope-bounded sprints, emergent
-      work items, one-agent-per-branch, checkpoints, human-in-the-loop
-      merge/deploy. The Agentic Loop: Conversation → Spec → Sprint →
-      Verification → Merge → Deploy.
+      work items, one-branch-per-sprint-per-agent (GOV-005 v1.1), checkpoints,
+      human-in-the-loop merge/deploy. Branching strategy updated: granular
+      commits within a single sprint branch, not per-task branches.
 
   - id: GOV-006
     path: 10_GOVERNANCE/GOV-006_LoggingSpecification.md
@@ -359,6 +358,30 @@ documents:
       Full audit of SPR-001 output. Frontend and backend both pass
       lint/typecheck/build/test. FULL PASS — both DEF-001 and DEF-002
       resolved. Deploy approved.
+
+  - id: VER-002
+    path: 40_VERIFICATION/VER-002_SPR-004_Audit.md
+    title: "SPR-004 Architect Audit Report"
+    type: verification
+    status: APPROVED
+    tags: [verification, audit, sprint, trust-accounting, quality]
+    agents: [architect]
+    summary: >
+      Full audit of SPR-004 backend trust accounting. FULL PASS.
+      63 tests across 5 files, all 4 gates passed. DEF-003/004/005
+      resolved (missing tests, server.ts registration, lib/errors.ts).
+
+  - id: VER-003
+    path: 40_VERIFICATION/VER-003_SPR-002_Audit.md
+    title: "SPR-002 Architect Audit Report"
+    type: verification
+    status: APPROVED
+    tags: [verification, audit, sprint, authentication, rbac]
+    agents: [architect]
+    summary: >
+      Full audit of SPR-002 frontend auth/RBAC. FULL PASS.
+      46 tests across 23 files, all 4 gates passed. DEF-006/007
+      resolved (missing deps, branch consolidation).
 
   # ── 50_DEFECTS ──────────────────────────────────────────────────────────────
   - id: DEF-001
@@ -467,10 +490,11 @@ documents:
     tags: [agent-instructions, frontend, nextjs, lexflow]
     agents: [frontend]
     summary: >
-      LexFlow-specific frontend boot doc. VM: lexflow-architect,
+      LexFlow-specific frontend boot doc v1.1. VM: lexflow-architect,
       Repo: lexflow-frontend, Stack: Next.js 15/tRPC/NextAuth/Drizzle/Tailwind.
       9-step CODEX reading order, binding contracts (CON-001, CON-002),
-      database ownership (lexflow_main), governance compliance checklist.
+      HARD RULES governance section with mandatory test file requirements,
+      /git_commit workflow reference.
 
   - id: AGT-003-BE
     path: 80_AGENTS/AGT-003-BE_Backend_Developer.md
@@ -480,10 +504,11 @@ documents:
     tags: [agent-instructions, backend, fastify, trust-accounting, lexflow]
     agents: [backend]
     summary: >
-      LexFlow-specific backend boot doc. VM: lexflow-backend,
+      LexFlow-specific backend boot doc v1.1. VM: lexflow-backend,
       Repo: lexflow-backend, Stack: Fastify 4/Drizzle/TypeBox.
       9-step reading order, CON-002 binding (17 routes listed),
       ledger engine details, advisory locks, immutability rules.
+      HARD RULES governance section with mandatory test file requirements.
 
   - id: AGT-003
     path: 80_AGENTS/AGT-003_Tester_Agent.md
