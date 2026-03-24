@@ -127,6 +127,92 @@ documents:
       Backend scaffold (Fastify 4 + health endpoint), VM provisioning,
       CI pipeline, deploy scripts. Mandatory GOV compliance table.
 
+  - id: SPR-002
+    path: 05_PROJECT/SPR-002_AuthRBAC.md
+    title: "Authentication & RBAC Sprint"
+    type: sprint
+    status: PLANNING
+    tags: [sprint, phase-1, auth, rbac, mfa]
+    agents: [frontend]
+    summary: >
+      Phase 1: 11 tasks. NextAuth.js credentials + JWT, RBAC permission
+      matrix, TOTP MFA with recovery codes, audit logging middleware,
+      tRPC auth middleware, login/dashboard/MFA/user management UI.
+      Backend Agent idle — may start trust schema early.
+
+  - id: SPR-003
+    path: 05_PROJECT/SPR-003_MatterManagement.md
+    title: "Matter Management Sprint"
+    type: sprint
+    status: PLANNING
+    tags: [sprint, phase-2, matter-management, clients, contacts]
+    agents: [frontend]
+    summary: >
+      Phase 2: 16 tasks. Client/matter/contact schemas, tRPC routers,
+      creation wizard, SOL deadline tracking, medical treatments,
+      dashboard widgets. Trust tab placeholder.
+
+  - id: SPR-004
+    path: 05_PROJECT/SPR-004_TrustAccountingBackend.md
+    title: "Trust Accounting Backend Sprint"
+    type: sprint
+    status: PLANNING
+    tags: [sprint, phase-3, trust-accounting, iolta, ledger, backend]
+    agents: [backend]
+    summary: >
+      Phase 3 Backend: 14 tasks. All 17 CON-002 routes. Ledger engine
+      with advisory locks, SERIALIZABLE isolation, immutable journal entries.
+      Bank statement import, three-way reconciliation.
+
+  - id: SPR-005
+    path: 05_PROJECT/SPR-005_TrustAccountingFrontend.md
+    title: "Trust Accounting Frontend Sprint"
+    type: sprint
+    status: PLANNING
+    tags: [sprint, phase-3, trust-accounting, frontend, integration]
+    agents: [frontend]
+    summary: >
+      Phase 3 Frontend: 8 tasks. Trust client library with circuit breaker,
+      tRPC proxy router, trust dashboard/account/transaction UI,
+      reconciliation UI. First cross-service integration — Architect
+      performs contract compliance test.
+
+  - id: SPR-006
+    path: 05_PROJECT/SPR-006_DocumentManagement.md
+    title: "Document Management Sprint"
+    type: sprint
+    status: PLANNING
+    tags: [sprint, phase-4, documents, upload, local-storage]
+    agents: [frontend]
+    summary: >
+      Phase 4: 8 tasks. Local disk file storage, drag-and-drop upload,
+      PDF viewer, category tagging, cross-matter document search.
+
+  - id: SPR-007
+    path: 05_PROJECT/SPR-007_TimeBilling.md
+    title: "Time & Billing Sprint"
+    type: sprint
+    status: PLANNING
+    tags: [sprint, phase-5, time-tracking, billing, invoicing]
+    agents: [frontend]
+    summary: >
+      Phase 5: 13 tasks. Time entries with timer widget, expense tracking,
+      invoice creation wizard, payment recording with trust transfer,
+      billing dashboard, AR aging report.
+
+  - id: SPR-008
+    path: 05_PROJECT/SPR-008_PolishHardening.md
+    title: "Polish & Hardening Sprint"
+    type: sprint
+    status: PLANNING
+    tags: [sprint, phase-6, security, testing, production, hardening]
+    agents: [frontend, backend]
+    summary: >
+      Phase 6: 10 tasks. TLS, VM hardening, Sentry monitoring, rate
+      limiting, security headers, AES-256 encryption at rest, Playwright
+      E2E suite (6 workflows), k6 performance tests, backup/restore
+      verification, zero-downtime deploy.
+
   # ── 10_GOVERNANCE ───────────────────────────────────────────────────────────
   - id: GOV-001
     path: 10_GOVERNANCE/GOV-001_DocumentationStandard.md
