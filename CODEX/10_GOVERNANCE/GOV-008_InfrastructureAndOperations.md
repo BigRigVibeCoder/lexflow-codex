@@ -8,8 +8,8 @@ agents: [all]
 tags: [governance, infrastructure, deployment, git-workflow, agent-operations]
 related: [GOV-007, GOV-005, AGT-001, BLU-ARCH-001]
 created: 2026-03-22
-updated: 2026-03-22
-version: 1.0.0
+updated: 2026-03-24
+version: 2.0.0
 ---
 
 > **BLUF:** LexFlow uses a multi-repo architecture with CODEX as the shared PM submodule. All services deploy to a single GCP VM (not Cloud Run). Development is fully AI-agent-paced — the Architect Agent documents, commits, and triggers; the Developer Agents execute at machine speed.
@@ -128,48 +128,80 @@ The Human pulls all repos to their local machine for integration testing and pro
 
 ## 3. Deployment Architecture
 
-### 3.1 Target: Single GCP VM
+### 3.1 Target: Single GCP VM with Docker Compose
 
 > [!CAUTION]
-> **BLU-ARCH-001 specifies Cloud Run, Cloud SQL (managed), and GCS.** The actual deployment target is a **single GCP VM (`lexflow-prod`)**. All services run on this VM directly — no Cloud Run, no managed database services.
+> **BLU-ARCH-001 specifies Cloud Run, Cloud SQL (managed), and GCS.** The actual deployment target is a **single GCP VM (`lexflow-prod`)** running **Docker Compose**. All services run in containers on this VM — no Cloud Run, no managed database services.
+
+> [!IMPORTANT]
+> **SPR-001 was deployed using PM2 directly on the VM.** Starting with SPR-002, all services will migrate to Docker Compose. The PM2 deployment is legacy and will be cleaned up during the Docker migration.
 
 This changes the deployment model significantly:
 
 | BLU-ARCH-001 Specification | Actual Deployment |
 |:---------------------------|:------------------|
-| Cloud Run (Next.js) | PM2 or systemd on VM |
-| Cloud Run (Trust Service) | PM2 or systemd on VM |
-| Cloud SQL (managed PostgreSQL HA) | PostgreSQL installed on VM (self-managed) |
-| GCS (signed URL uploads) | **Local filesystem** (`/var/lexflow/documents/`) |
-| Cloud Run OIDC auth between services | Local network (localhost) or Unix socket |
-| Cloud Monitoring / Cloud Armor | Self-hosted monitoring (Prometheus/Grafana or similar) |
-| Terraform for Cloud infra | Ansible/shell scripts for VM configuration |
+| Cloud Run (Next.js) | Docker container (Next.js) via docker-compose |
+| Cloud Run (Trust Service) | Docker container (Fastify) via docker-compose |
+| Cloud SQL (managed PostgreSQL HA) | Docker container (PostgreSQL 16) with volume mount |
+| GCS (signed URL uploads) | Docker volume mount (`/var/lexflow/documents/`) |
+| Cloud Run OIDC auth between services | Docker network (internal bridge) |
+| Cloud Monitoring / Cloud Armor | Self-hosted monitoring (TBD) |
+| Terraform for Cloud infra | `docker-compose.yml` + deploy scripts |
 
-### 3.2 VM Service Architecture
+### 3.2 VM Service Architecture (Docker Compose)
 
 ```
 lexflow-prod (GCP VM)
-├── nginx (reverse proxy, TLS termination)
-│   ├── / → localhost:3000 (Next.js app)
-│   └── /api/trust/ → localhost:4000 (Trust service)
-├── Node.js (Next.js 15) → port 3000
-│   └── managed by PM2 or systemd
-├── Node.js (Fastify Trust Service) → port 4000
-│   └── managed by PM2 or systemd
-├── PostgreSQL 15
-│   ├── lexflow_main (frontend DB)
-│   └── lexflow_trust (trust service DB)
-└── File storage
-    └── /var/lexflow/documents/ (local disk — test environment)
+├── docker-compose.yml
+├── nginx (container — reverse proxy, TLS termination)
+│   ├── / → lexflow-web:3000 (Next.js app)
+│   └── /api/trust/ → lexflow-trust:4000 (Trust service)
+├── lexflow-web (container — Next.js 15) → port 3000
+│   └── Dockerfile in lexflow-frontend/
+├── lexflow-trust (container — Fastify Trust Service) → port 4000
+│   └── Dockerfile in lexflow-backend/
+├── postgres (container — PostgreSQL 16) → port 5432
+│   ├── lexflow_web database
+│   ├── lexflow_trust database
+│   └── volume: /opt/lexflow/data/postgres/
+└── volumes
+    ├── /opt/lexflow/data/postgres/  (DB persistence)
+    ├── /opt/lexflow/data/documents/ (file storage)
+    ├── /opt/lexflow/certs/          (TLS certificates)
+    └── /opt/lexflow/backups/        (pg_dump backups)
 ```
 
 ### 3.3 Security Implications
 
-- **Service-to-service auth simplifies** — both services on localhost, no OIDC tokens needed for internal calls
-- **HIPAA/data sovereignty improves** — all data on a VM you fully control
-- **PostgreSQL HA** — must be self-managed (streaming replication or periodic backups instead of Cloud SQL HA)
-- **TLS** — nginx handles HTTPS termination; internal services communicate over localhost (plain HTTP)
-- **Backups** — must be scripted (pg_dump + cron instead of Cloud SQL automated backups)
+- **Service-to-service auth simplifies** — services communicate over Docker bridge network, no OIDC tokens needed
+- **HIPAA/data sovereignty improves** — all data on a VM you fully control, in named Docker volumes
+- **PostgreSQL HA** — must be self-managed (pg_dump + cron for backups, volume snapshots)
+- **TLS** — nginx container handles HTTPS termination; internal services communicate over Docker network (plain HTTP)
+- **Isolation** — each service runs in its own container with limited privileges
+
+### 3.4 Docker Ownership Boundaries
+
+> [!IMPORTANT]
+> **Docker is an Architect-owned layer.** Developer agents are container-unaware. They write application code that runs on `localhost`. The Architect wraps their output in Docker images after audit.
+
+| Layer | Owner | Artifacts |
+|:------|:------|:----------|
+| Application code, tests, business logic | Developer Agents | `src/`, `package.json`, test files |
+| Dockerfiles | **Architect Agent** | `Dockerfile` in each repo root |
+| docker-compose.yml | **Architect Agent** | In `lexflow-codex/` or `lexflow-prod/` |
+| nginx config | **Architect Agent** | nginx container config |
+| Deploy scripts | **Architect Agent** | `scripts/deploy.sh` |
+| CI/CD pipeline | **Architect Agent** | `.github/workflows/` |
+
+Developer agents MUST NOT:
+- Create or modify Dockerfiles
+- Reference Docker in their application code
+- Add Docker-specific environment handling
+
+Developer agents SHOULD:
+- Use `.env` / `.env.example` for configuration
+- Expose health endpoints for container health checks
+- Write code that works with `npm run dev` locally
 
 ---
 

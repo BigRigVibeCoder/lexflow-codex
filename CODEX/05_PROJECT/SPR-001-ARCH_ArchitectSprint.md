@@ -104,7 +104,7 @@ version: 1.0.0
   - Verify both health endpoints on production
   - Tag release: `v0.1.0`
 - **Acceptance:** `https://lexflow-prod/api/health` and `https://lexflow-prod/health` return 200.
-- **Status:** [ ] Not Started
+- **Status:** [x] Complete — Deployed via PM2 (legacy). Docker migration planned for SPR-002-ARCH. Tagged v0.1.0.
 
 ---
 
