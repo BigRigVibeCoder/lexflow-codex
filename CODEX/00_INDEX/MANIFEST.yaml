@@ -131,31 +131,43 @@ documents:
     path: 05_PROJECT/SPR-001-ARCH_ArchitectSprint.md
     title: "Architect Sprint — Parallel with SPR-001"
     type: sprint
-    status: ACTIVE
+    status: COMPLETE
     tags: [sprint, architect, phase-0, infrastructure, audit]
     agents: [architect]
     summary: >
-      8 architect tasks during SPR-001: verify prod VM, pre-stage
-      environment, create audit checklist template, health check script,
-      monitor both agents, audit SPR-001 output, deploy v0.1.
+      8 architect tasks completed: prod VM verified, Node.js/PM2/PostgreSQL
+      installed, audit checklist + VER-001, health check script, agent
+      monitoring, SPR-001 audit (FULL PASS), deployed v0.1.0.
+
+  - id: SPR-002-ARCH
+    path: 05_PROJECT/SPR-002-ARCH_DockerMigration.md
+    title: "Architect Sprint — Docker Migration"
+    type: sprint
+    status: COMPLETE
+    tags: [sprint, architect, docker, infrastructure, deployment]
+    agents: [architect]
+    summary: >
+      9 tasks completed: Dockerfiles for frontend/backend, docker-compose.yml
+      (4 services: postgres, trust, web, nginx), nginx config with Docker DNS
+      resolver, PM2 legacy cleanup, production Docker deploy verified.
 
   - id: SPR-001
     path: 05_PROJECT/SPR-001_FoundationSprint.md
     title: "Foundation Sprint — Project Scaffold & Infrastructure"
     type: sprint
-    status: PLANNING
+    status: COMPLETE
     tags: [sprint, phase-0, scaffold, infrastructure]
     agents: [frontend, backend]
     summary: >
-      Phase 0: 6 tasks. Frontend scaffold (Next.js 15 + health endpoint),
-      Backend scaffold (Fastify 4 + health endpoint), VM provisioning,
-      CI pipeline, deploy scripts. Mandatory GOV compliance table.
+      Phase 0 COMPLETE: Frontend (Next.js 15) and Backend (Fastify 4)
+      scaffolded with health endpoints. Audit FULL PASS. Tagged v0.1.0.
+      Deployed to lexflow-prod via Docker Compose.
 
   - id: SPR-002
     path: 05_PROJECT/SPR-002_AuthRBAC.md
     title: "Authentication & RBAC Sprint"
     type: sprint
-    status: PLANNING
+    status: ACTIVE
     tags: [sprint, phase-1, auth, rbac, mfa]
     agents: [frontend]
     summary: >
@@ -180,7 +192,7 @@ documents:
     path: 05_PROJECT/SPR-004_TrustAccountingBackend.md
     title: "Trust Accounting Backend Sprint"
     type: sprint
-    status: PLANNING
+    status: ACTIVE
     tags: [sprint, phase-3, trust-accounting, iolta, ledger, backend]
     agents: [backend]
     summary: >
@@ -327,13 +339,49 @@ documents:
     title: "Infrastructure & Operations Standard"
     type: reference
     status: APPROVED
-    tags: [governance, infrastructure, deployment, multi-repo, vm, operations]
+    tags: [governance, infrastructure, deployment, multi-repo, vm, docker, operations]
     agents: [all]
     summary: >
       LexFlow infrastructure decisions. Multi-repo with CODEX submodule,
-      GCP VM deployment (PM2/nginx, not Cloud Run), contract-first shared
-      types, local disk file storage, AI-agent pace development,
-      agent communication protocol.
+      GCP VM deployment via Docker Compose (4 containers: postgres, trust,
+      web, nginx). Docker is Architect-owned — developer agents are
+      container-unaware. Contract-first shared types, AI-agent pace.
+
+  # ── 40_VERIFICATION ────────────────────────────────────────────────────────
+  - id: VER-001
+    path: 40_VERIFICATION/VER-001_SPR-001_Audit.md
+    title: "SPR-001 Architect Audit Report"
+    type: verification
+    status: APPROVED
+    tags: [verification, audit, sprint, quality]
+    agents: [architect]
+    summary: >
+      Full audit of SPR-001 output. Frontend and backend both pass
+      lint/typecheck/build/test. FULL PASS — both DEF-001 and DEF-002
+      resolved. Deploy approved.
+
+  # ── 50_DEFECTS ──────────────────────────────────────────────────────────────
+  - id: DEF-001
+    path: 50_DEFECTS/DEF-001_Frontend_Missing_EnvExample.md
+    title: "Frontend Missing .env.example"
+    type: reference
+    status: CLOSED
+    tags: [bug, governance, sprint]
+    agents: [frontend]
+    summary: >
+      Frontend repo missing .env.example file (GOV-008 violation).
+      Fixed by frontend agent — .env.example added with all env vars.
+
+  - id: DEF-002
+    path: 50_DEFECTS/DEF-002_Backend_Missing_TypescriptEslint.md
+    title: "Backend Missing typescript-eslint Package"
+    type: reference
+    status: CLOSED
+    tags: [bug, governance, sprint]
+    agents: [backend]
+    summary: >
+      Backend ESLint references typescript-eslint but package not in
+      devDependencies (GOV-003 violation). Fixed — package added.
 
   # ── 20_BLUEPRINTS ──────────────────────────────────────────────────────────
   - id: BLU-ARCH-001
