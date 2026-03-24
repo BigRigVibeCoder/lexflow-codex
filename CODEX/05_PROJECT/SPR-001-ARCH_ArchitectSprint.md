@@ -25,7 +25,7 @@ version: 1.0.0
 - **Category:** ARCH-INFRA
 - **Deliverable:** Confirm SSH access to `lexflow-prod`. Document IP, hostname, OS version, current state.
 - **Acceptance:** `ssh lexflow-prod` connects. Note specs (CPU, RAM, disk).
-- **Status:** [ ] Not Started
+- **Status:** [x] Complete — 4 CPUs, 15GB RAM, 48GB disk, Ubuntu 24.04, GCP us-east1-b
 
 ## A-002: Pre-Stage Production Environment
 - **Category:** ARCH-INFRA
@@ -37,7 +37,7 @@ version: 1.0.0
   - Clone both repos into `/opt/lexflow/`
   - Initialize CODEX submodule in both
 - **Acceptance:** Both repos cloned on prod. Node.js 20 available. `lexflow` user exists.
-- **Status:** [ ] Not Started
+- **Status:** [x] Complete — Node.js 20, PM2 6, PostgreSQL 16, nginx 1.24. Databases: `lexflow_web`, `lexflow_trust`. Dirs: `/opt/lexflow/{frontend,backend,backups}`
 
 ## A-003: Create Sprint Audit Checklist Template
 - **Category:** ARCH-AUDIT
@@ -56,7 +56,7 @@ version: 1.0.0
   - [ ] GOV-008: `.env.example` present, CODEX submodule linked
   - [ ] Contract compliance (if applicable)
 - **Acceptance:** Checklist doc exists and can be cloned per sprint.
-- **Status:** [ ] Not Started
+- **Status:** [x] Complete — VER-001 template + first audit filed (VER-001_SPR-001_Audit.md)
 
 ## A-004: Create Health Check Script
 - **Category:** ARCH-INTEG
@@ -66,7 +66,7 @@ version: 1.0.0
   curl -sf http://localhost:4000/health && echo "✅ Trust OK" || echo "❌ Trust FAIL"
   ```
 - **Acceptance:** Script runs, reports status of both services.
-- **Status:** [ ] Not Started
+- **Status:** [x] Complete — `scripts/health-check.sh` created (local + remote support)
 
 ## A-005: Monitor Frontend Agent Progress
 - **Category:** ARCH-MON
@@ -74,7 +74,7 @@ version: 1.0.0
   - Branches created (feature/SPR-001-T001-*, feature/SPR-001-T002-*)
   - Commits pushed
   - Any issues/questions from agent
-- **Status:** [ ] Not Started
+- **Status:** [x] Complete — Repo cloned, branch verified, build/test pass
 
 ## A-006: Monitor Backend Agent Progress
 - **Category:** ARCH-MON
@@ -82,7 +82,7 @@ version: 1.0.0
   - Branches created (feature/SPR-001-T003-*, feature/SPR-001-T004V-*)
   - Commits pushed
   - Any issues/questions from agent
-- **Status:** [ ] Not Started
+- **Status:** [x] Complete — Repo cloned, branch verified, build pass, lint DEF-002 filed
 
 ## A-007: SPR-001 Architect Audit
 - **Category:** ARCH-AUDIT
@@ -94,7 +94,7 @@ version: 1.0.0
   - File `DEF-001` if any failures
   - Mark SPR-001 tasks as audited in sprint doc
 - **Acceptance:** Both repos pass full audit checklist. Zero DEF- reports.
-- **Status:** [ ] Not Started
+- **Status:** [x] Complete — CONDITIONAL PASS. DEF-001 + DEF-002 filed.
 
 ## A-008: SPR-001 Deploy to Production
 - **Category:** ARCH-DEPLOY
@@ -112,14 +112,14 @@ version: 1.0.0
 
 | Task | Category | Status | Priority |
 |:-----|:---------|:-------|:---------|
-| A-001 | INFRA | [ ] | **Do now** |
-| A-002 | INFRA | [ ] | **Do now** |
-| A-003 | AUDIT | [ ] | **Do now** |
-| A-004 | INTEG | [ ] | **Do now** |
-| A-005 | MON | [ ] | Ongoing |
-| A-006 | MON | [ ] | Ongoing |
-| A-007 | AUDIT | [ ] | When agents finish |
-| A-008 | DEPLOY | [ ] | After A-007 passes |
+| A-001 | INFRA | [x] | ~~Do now~~ Done |
+| A-002 | INFRA | [x] | ~~Do now~~ Done |
+| A-003 | AUDIT | [x] | ~~Do now~~ Done |
+| A-004 | INTEG | [x] | ~~Do now~~ Done |
+| A-005 | MON | [x] | ~~Ongoing~~ Done |
+| A-006 | MON | [x] | ~~Ongoing~~ Done |
+| A-007 | AUDIT | [x] | ~~When agents finish~~ CONDITIONAL PASS |
+| A-008 | DEPLOY | [ ] | After DEF fixes + re-audit |
 
 ---
 
