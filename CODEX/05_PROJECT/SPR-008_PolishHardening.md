@@ -9,7 +9,7 @@ tags: [sprint, phase-6, security, testing, production, hardening]
 related: [BCK-001, GOV-002, GOV-004, GOV-008]
 created: 2026-03-24
 updated: 2026-03-24
-version: 1.0.0
+version: 1.1.0
 ---
 
 > **BLUF:** Production hardening, security, E2E testing, performance testing, backup/restore. End state: LexFlow is production-ready on `lexflow-prod` with TLS, monitoring, rate limiting, E2E tests, and a documented backup/restore procedure. **Both agents contribute. This sprint is the final gate before v1.0 release.**
@@ -27,10 +27,12 @@ version: 1.0.0
 
 | Governance Doc | Sprint Requirement |
 |:---------------|:-------------------|
-| **GOV-002** | E2E test suite (Playwright). Performance tests (k6). |
-| **GOV-003** | Security review: no secrets in code, no hardcoded URLs. |
-| **GOV-004** | Sentry error monitoring. Global error handlers verified. |
-| **GOV-006** | Log rotation configured. Structured logs flowing to files. |
+| **GOV-001** | JSDoc on all exports enforced via ESLint. File headers required. |
+| **GOV-002** | E2E test suite (Playwright). Performance tests (k6). Coverage ≥80% gate. |
+| **GOV-003** | Security review. ESLint complexity ≤10. Max 60-line functions. Accessibility (axe). |
+| **GOV-004** | Sentry error monitoring. Global error handlers. FMEA for trust accounting. |
+| **GOV-005** | Branch: `feature/SPR-008-polish-hardening` per agent. One commit per task. |
+| **GOV-006** | Persistent log files (JSONL). Log rotation. Correlation IDs in frontend. |
 | **GOV-008** | All hardening applied to `lexflow-prod` VM. |
 
 ---
@@ -38,7 +40,7 @@ version: 1.0.0
 ## Backend Agent Tasks (lexflow-backend)
 
 ### T-076V: Production VM Hardening
-- **Branch:** `feature/SPR-008-T076V-vm-hardening`
+- **Commit:** `feat(SPR-008): T-076V production VM hardening`
 - **Dependencies:** T-004V
 - **Deliverable:**
   - TLS via Let's Encrypt (Certbot) + nginx HTTPS config
@@ -52,7 +54,7 @@ version: 1.0.0
 - **Status:** [ ] Not Started
 
 ### T-077V: Production Deploy Automation
-- **Branch:** `feature/SPR-008-T077V-deploy-automation`
+- **Commit:** `feat(SPR-008): T-077V production deploy automation`
 - **Dependencies:** T-006V, T-076V
 - **Deliverable:**
   - Updated `scripts/deploy.sh` with:
@@ -65,7 +67,7 @@ version: 1.0.0
 - **Status:** [ ] Not Started
 
 ### T-085: Backup & Restore Verification
-- **Branch:** `feature/SPR-008-T085-backup-restore`
+- **Commit:** `feat(SPR-008): T-085 backup and restore verification`
 - **Dependencies:** T-076V
 - **Deliverable:**
   - Documented backup/restore procedure
@@ -80,7 +82,7 @@ version: 1.0.0
 ## Frontend Agent Tasks (lexflow-frontend)
 
 ### T-078: Error Monitoring (Both Services)
-- **Branch:** `feature/SPR-008-T078-error-monitoring`
+- **Commit:** `feat(SPR-008): T-078 error monitoring setup`
 - **Agent:** Both (each adds to their own repo)
 - **Dependencies:** T-002, T-003
 - **Deliverable:**
@@ -93,7 +95,7 @@ version: 1.0.0
 - **Status:** [ ] Not Started
 
 ### T-079: Rate Limiting
-- **Branch:** `feature/SPR-008-T079-rate-limiting`
+- **Commit:** `feat(SPR-008): T-079 rate limiting`
 - **Dependencies:** T-002
 - **Deliverable:**
   - Auth routes: 5 requests/minute per IP
@@ -104,7 +106,7 @@ version: 1.0.0
 - **Status:** [ ] Not Started
 
 ### T-080: Security Headers
-- **Branch:** `feature/SPR-008-T080-security-headers`
+- **Commit:** `feat(SPR-008): T-080 security headers`
 - **Dependencies:** T-002
 - **Deliverable:**
   - `next.config.ts` security headers: CSP, HSTS (max-age 31536000), X-Frame-Options DENY, X-Content-Type-Options nosniff, Referrer-Policy strict-origin-when-cross-origin
@@ -113,7 +115,7 @@ version: 1.0.0
 - **Status:** [ ] Not Started
 
 ### T-081: Data Encryption at Rest
-- **Branch:** `feature/SPR-008-T081-encryption-at-rest`
+- **Commit:** `feat(SPR-008): T-081 data encryption at rest`
 - **Agent:** Both
 - **Dependencies:** T-007, T-034
 - **Deliverable:**
@@ -125,7 +127,7 @@ version: 1.0.0
 - **Status:** [ ] Not Started
 
 ### T-082: Session Management UI
-- **Branch:** `feature/SPR-008-T082-session-management`
+- **Commit:** `feat(SPR-008): T-082 session management UI`
 - **Dependencies:** T-011
 - **Deliverable:**
   - Active sessions list (device, IP, last active)
@@ -135,7 +137,7 @@ version: 1.0.0
 - **Status:** [ ] Not Started
 
 ### T-083: E2E Test Suite
-- **Branch:** `feature/SPR-008-T083-e2e-tests`
+- **Commit:** `test(SPR-008): T-083 E2E test suite`
 - **Dependencies:** All UI tasks
 - **Deliverable:**
   - Playwright test suite covering full workflows:
@@ -151,7 +153,7 @@ version: 1.0.0
 - **Status:** [ ] Not Started
 
 ### T-084: Performance Testing
-- **Branch:** `feature/SPR-008-T084-performance-tests`
+- **Commit:** `test(SPR-008): T-084 performance testing`
 - **Agent:** Both
 - **Dependencies:** All routes
 - **Deliverable:**
@@ -167,26 +169,120 @@ version: 1.0.0
 
 ---
 
+## Governance Compliance Tasks (New — From Gap Analysis)
+
+> These tasks close the remaining governance gaps identified in the full GOV-001 through GOV-008 audit.
+
+### T-086: ESLint Code Quality Rules (Both Services)
+- **Commit:** `feat(SPR-008): T-086 ESLint code quality rules`
+- **Agent:** Both
+- **Deliverable:**
+  - ESLint `jsdoc` plugin — require JSDoc on all exports (GOV-001 §4, GOV-003 §1.2)
+  - ESLint `complexity` rule ≤10 (GOV-003 §1.3)
+  - ESLint `max-lines-per-function` rule = 60 (GOV-003 §1.3)
+  - Fix any violations or add `// GOV-003-exempt` with justification
+- **Acceptance:** `npm run lint` passes with new rules active.
+- **Status:** [ ] Not Started
+
+### T-087: Coverage Threshold Gate (Both Services)
+- **Commit:** `feat(SPR-008): T-087 coverage threshold gate`
+- **Agent:** Both
+- **Deliverable:**
+  - vitest.config.ts: `coverage.thresholds.lines = 80`
+  - `npm run test:coverage` fails if line coverage < 80%
+  - Add coverage report to CI pipeline
+- **Acceptance:** Coverage gate blocks merge if <80%. Current coverage documented.
+- **Status:** [ ] Not Started
+
+### T-088: Persistent Log Output (Both Services)
+- **Commit:** `feat(SPR-008): T-088 persistent log output`
+- **Agent:** Both
+- **Deliverable:**
+  - `LOG_FILE` env var support in pino config (GOV-006 §4)
+  - JSONL output to `/var/log/lexflow/{service}_{date}.log`
+  - Tests run at `LOG_LEVEL=TRACE` (GOV-006 §14)
+  - `.env.example` updated with LOG_FILE, LOG_LEVEL
+- **Acceptance:** Logs written to JSONL file in production. Tests run at TRACE.
+- **Status:** [ ] Not Started
+
+### T-089: Frontend Correlation ID Propagation
+- **Commit:** `feat(SPR-008): T-089 frontend correlation ID propagation`
+- **Agent:** Frontend
+- **Deliverable:**
+  - Trust-client includes `X-Correlation-ID` header on every request (GOV-004 §8)
+  - tRPC middleware generates correlation ID for each request
+  - All logger calls include correlation ID
+- **Acceptance:** Trust service logs show correlation IDs matching frontend requests.
+- **Status:** [ ] Not Started
+
+### T-090: Accessibility Scan (axe)
+- **Commit:** `test(SPR-008): T-090 accessibility scan`
+- **Agent:** Frontend
+- **Deliverable:**
+  - Playwright axe integration in E2E suite (GOV-003 WCAG 2.1 AA)
+  - Scan all major pages: dashboard, matters, trust, login
+  - Fix critical accessibility violations
+- **Acceptance:** axe reports zero critical/serious violations.
+- **Status:** [ ] Not Started
+
+---
+
+## Architect Tasks (SPR-008)
+
+### T-091: FMEA — Trust Accounting (Architect)
+- **Agent:** Architect
+- **Deliverable:**
+  - Failure Mode & Effects Analysis for trust accounting (GOV-004 §11)
+  - Document: `CODEX/40_VERIFICATION/VER-006_FMEA_TrustAccounting.md`
+  - Cover: DB connection loss, trust service down, overdraft, double-entry mismatch
+- **Status:** [ ] Not Started
+
+### T-092: Post-Incident Review Runbook (Architect)
+- **Agent:** Architect
+- **Deliverable:**
+  - `CODEX/30_RUNBOOKS/RUN-002_PostIncidentReview.md` (GOV-004 §12)
+  - Template for Severity 1-3 incidents
+  - Blameless review process documented
+- **Status:** [ ] Not Started
+
+### T-093: Requirements Traceability Matrix (Architect)
+- **Agent:** Architect
+- **Deliverable:**
+  - `CODEX/40_VERIFICATION/VER-007_TraceabilityMatrix.md` (GOV-002 §22)
+  - Map: CON-002 routes → backend route files → test files
+  - Map: SPR task IDs → source files → test files
+- **Status:** [ ] Not Started
+
+---
+
 ## Sprint Checklist
 
-| Task | Agent | Status | Branch | Audited |
-|:-----|:------|:-------|:-------|:--------|
-| T-076V | Backend | [ ] | `feature/SPR-008-T076V-vm-hardening` | [ ] |
-| T-077V | Backend | [ ] | `feature/SPR-008-T077V-deploy-automation` | [ ] |
-| T-078 | Both | [ ] | `feature/SPR-008-T078-error-monitoring` | [ ] |
-| T-079 | Frontend | [ ] | `feature/SPR-008-T079-rate-limiting` | [ ] |
-| T-080 | Frontend | [ ] | `feature/SPR-008-T080-security-headers` | [ ] |
-| T-081 | Both | [ ] | `feature/SPR-008-T081-encryption-at-rest` | [ ] |
-| T-082 | Frontend | [ ] | `feature/SPR-008-T082-session-management` | [ ] |
-| T-083 | Frontend | [ ] | `feature/SPR-008-T083-e2e-tests` | [ ] |
-| T-084 | Both | [ ] | `feature/SPR-008-T084-performance-tests` | [ ] |
-| T-085 | Backend | [ ] | `feature/SPR-008-T085-backup-restore` | [ ] |
+| Task | Agent | Category | Status |
+|:-----|:------|:---------|:-------|
+| T-076V | Backend | VM Hardening | [ ] |
+| T-077V | Backend | Deploy Automation | [ ] |
+| T-078 | Both | Error Monitoring (Sentry) | [ ] |
+| T-079 | Frontend | Rate Limiting | [ ] |
+| T-080 | Frontend | Security Headers | [ ] |
+| T-081 | Both | Encryption at Rest | [ ] |
+| T-082 | Frontend | Session Management | [ ] |
+| T-083 | Frontend | E2E Test Suite | [ ] |
+| T-084 | Both | Performance Testing | [ ] |
+| T-085 | Backend | Backup & Restore | [ ] |
+| T-086 | Both | ESLint Code Quality | [ ] |
+| T-087 | Both | Coverage Threshold | [ ] |
+| T-088 | Both | Persistent Logs | [ ] |
+| T-089 | Frontend | Correlation IDs | [ ] |
+| T-090 | Frontend | Accessibility (axe) | [ ] |
+| T-091 | Architect | FMEA Trust Accounting | [ ] |
+| T-092 | Architect | Post-Incident Runbook | [ ] |
+| T-093 | Architect | Traceability Matrix | [ ] |
 
 ---
 
 ## Sprint Completion Criteria
 
-- [ ] All 10 tasks pass acceptance criteria
+- [ ] All 18 tasks pass acceptance criteria
 - [ ] TLS working on `lexflow-prod`
 - [ ] E2E tests pass all 6 workflows
 - [ ] Performance baseline met (p95 <500ms)
@@ -196,5 +292,10 @@ version: 1.0.0
 - [ ] Rate limiting active
 - [ ] Security headers pass audit
 - [ ] Sentry capturing errors with context
-- [ ] **Architect final audit: ALL GOV docs (001-008) compliance verified across both repos**
+- [ ] Coverage ≥80% on both repos
+- [ ] Persistent log files configured
+- [ ] Correlation IDs flow across service boundary
+- [ ] Zero critical accessibility violations
+- [ ] FMEA complete for trust accounting
+- [ ] **Architect final audit: ALL GOV docs (001-008) compliance verified**
 - [ ] **v1.0 release tag created**
