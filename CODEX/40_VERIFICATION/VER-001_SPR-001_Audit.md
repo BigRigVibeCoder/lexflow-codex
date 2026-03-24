@@ -35,13 +35,13 @@ version: 1.0.0
 
 | Check | Frontend | Backend | Notes |
 |:------|:---------|:--------|:------|
-| `npm install` | ⏭️ | ⏭️ | npm not on architect VM |
-| `npm run build` | ⏭️ | ⏭️ | Deferred to CI |
-| `npm run lint` | ⏭️ | ⏭️ | Deferred to CI |
-| `npm run typecheck` | ⏭️ | ⏭️ | Deferred to CI |
-| `npm run test` | ⏭️ | ⏭️ | Deferred to CI |
+| `npm install` | ✅ | ✅ | |
+| `npm run build` | ✅ | ✅ | |
+| `npm run lint` | ✅ | ❌ | Missing `typescript-eslint` package — DEF-002 |
+| `npm run typecheck` | ✅ | ✅ | |
+| `npm run test` | ✅ (2/2) | ✅ (3/3) | |
 
-> ⚠️ **Node.js/npm not installed on lexflow-architect VM.** Build and test verification must be confirmed via GitHub Actions CI or on the agent VMs. Both repos have CI workflows (`.github/workflows/ci.yml`).
+> Verified on lexflow-architect VM with Node.js v20.20.1, npm 10.8.2.
 
 ---
 
@@ -134,6 +134,7 @@ version: 1.0.0
 | DEF ID | Severity | Repo | Issue |
 |:-------|:---------|:-----|:------|
 | DEF-001 | Minor | lexflow-frontend | Missing `.env.example` file (GOV-008 violation) |
+| DEF-002 | Minor | lexflow-backend | `eslint.config.mjs` imports missing `typescript-eslint` package (GOV-003 violation) |
 
 ---
 
@@ -148,8 +149,8 @@ version: 1.0.0
 
 ### Concerns
 
-1. **Build/test not verified locally** — npm not installed on architect VM. Must confirm CI passes.
-2. **Frontend missing `.env.example`** — Minor but violates GOV-008.
+1. **Frontend missing `.env.example`** — Minor but violates GOV-008. Filed DEF-001.
+2. **Backend lint broken** — `typescript-eslint` package missing from devDependencies. Filed DEF-002.
 
 ---
 
@@ -158,6 +159,6 @@ version: 1.0.0
 | Field | Value |
 |:------|:------|
 | **Verdict** | **CONDITIONAL PASS** |
-| **Condition** | Frontend must add `.env.example`. CI must pass on both repos. |
-| **Deploy approved** | YES — after condition met |
-| **Defects filed** | DEF-001 (minor) |
+| **Condition** | DEF-001 + DEF-002 must be resolved. Both are minor fixes. |
+| **Deploy approved** | YES — after both defects fixed |
+| **Defects filed** | DEF-001 (minor), DEF-002 (minor) |
