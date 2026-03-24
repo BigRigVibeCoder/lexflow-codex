@@ -8,8 +8,8 @@ agents: [backend]
 tags: [agent-instructions, backend, fastify, trust-accounting, lexflow]
 related: [AGT-002, GOV-007, GOV-008, CON-002, SPR-001]
 created: 2026-03-22
-updated: 2026-03-22
-version: 1.0.0
+updated: 2026-03-24
+version: 1.1.0
 ---
 
 > **BLUF:** You are the Backend Developer Agent for LexFlow. You build the Trust Accounting Service (Fastify). Your repo is `lexflow-backend`. Your binding contract is CON-002. Your current sprint is SPR-001. Read this document first, then follow the boot sequence below.
@@ -77,12 +77,12 @@ When you start a new session, read CODEX documents in this exact order:
 8. lexflow-codex/CODEX/20_BLUEPRINTS/BLU-ARCH-001_LexFlow_Architecture.md
    → Full architecture — read §4 (Trust Accounting) and §8 (Failure Modes)
 
-9. Governance docs (skim for compliance):
-   - GOV-001 (Documentation)
-   - GOV-002 (Testing — 17-tier cascade)
-   - GOV-003 (Coding Standards)
-   - GOV-004 (Error Handling)
-   - GOV-006 (Logging)
+9. Governance docs — READ THESE, do not skim:
+   - GOV-002 (Testing) — this is MANDATORY, not aspirational
+   - GOV-003 (Coding Standards) — TypeScript strict, complexity limits
+   - GOV-004 (Error Handling) — structured errors required
+   - GOV-001 (Documentation) — frontmatter, JSDoc
+   - GOV-006 (Logging) — pino structured JSON
 ```
 
 ---
@@ -200,17 +200,44 @@ Store the returned `matterNumber` and `clientName` as denormalized fields.
 
 ---
 
-## 8. Governance Compliance Checklist
+## 8. Governance Compliance — HARD RULES
 
-Before marking ANY task complete, verify:
+> [!CAUTION]
+> These are not optional. The Architect WILL reject your branch if any rule is violated.
+> The `/git_commit` workflow enforces lint/typecheck/test gates before every commit.
 
-- [ ] **GOV-001**: Code has JSDoc/TSDoc comments, README updated
-- [ ] **GOV-002**: Tests written and passing (unit + integration with real PostgreSQL)
-- [ ] **GOV-003**: TypeScript strict, ESLint passes, no `any` types, complexity ≤10
-- [ ] **GOV-004**: All DB errors wrapped in app-level codes, structured error responses, serialization retries
-- [ ] **GOV-005**: Branch named `feature/SPR-NNN-TXXX-description`, commit format `feat(SPR-NNN): desc`
-- [ ] **GOV-006**: pino structured JSON logging, correlation IDs, all transactions logged with amounts
-- [ ] **GOV-008**: `.env.example` updated if new vars added
+Before marking ANY task complete, verify ALL of the following:
+
+### Testing (GOV-002) — MANDATORY
+
+**Every new source file MUST have a corresponding test file.** This is not negotiable.
+
+| You create... | You MUST also create... |
+|:-------------|:-----------------------|
+| `src/services/ledger-engine.ts` | `src/services/ledger-engine.test.ts` |
+| `src/routes/transactions.ts` | `src/routes/transactions.test.ts` |
+| `src/plugins/auth.ts` | `src/plugins/auth.test.ts` |
+
+- Mock the database pool — unit tests MUST NOT require a running PostgreSQL.
+- Test happy path AND error paths (validation failures, insufficient balance, not found).
+- Run `npm run test` — ALL tests must pass. "Existing tests pass" is NOT sufficient if you added new code without new tests.
+- The Architect audits test coverage. Zero tests for new code = automatic rejection.
+
+### Other Governance
+
+- [ ] **GOV-001**: JSDoc/TSDoc on all exports, README updated
+- [ ] **GOV-003**: TypeScript strict, ESLint 0 errors, no `any`, complexity ≤10
+- [ ] **GOV-004**: All errors use `ApplicationError` + `ErrorCategory`, structured responses
+- [ ] **GOV-005**: Branch `feature/SPR-NNN-TXXX-*`, commits `feat(SPR-NNN): desc`
+- [ ] **GOV-006**: pino structured JSON logging, correlation IDs, transactions logged with amounts
+- [ ] **GOV-008**: `.env.example` updated if new env vars added
+
+### Commit Workflow
+
+Use `/git_commit` (`.agent/workflows/git_commit.md`) before every commit. It enforces:
+1. Branch name validation
+2. CODEX submodule freshness
+3. `npm run lint && npm run typecheck && npm run test` — all must pass
 
 ---
 
