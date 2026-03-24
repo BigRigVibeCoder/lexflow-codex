@@ -93,7 +93,49 @@ Identify any test-generated files:
 - Screenshots, recordings, or output files from test runs
 - Database files in test directories: `*.db`, `*.sqlite`
 
-### 2d. Action for Junk
+### 2d. Pre-Commit Quality Gate (GOV-002, GOV-003, GOV-005, GOV-008)
+
+> [!IMPORTANT]
+> These gates are **mandatory**. Do NOT bypass them without explicit Architect approval.
+
+**Branch name check (GOV-005):**
+
+```bash
+BRANCH=$(git branch --show-current)
+echo "Current branch: $BRANCH"
+```
+
+- If on `main` → STOP unless you are the Architect Agent committing governance docs.
+- Developer agents MUST be on a branch matching `feature/SPR-NNN-TXXX-*`.
+- If the branch name doesn't match the pattern, rename it before committing.
+
+**CODEX submodule freshness (GOV-008):**
+
+```bash
+# Check if submodule is behind remote
+git submodule status codex 2>/dev/null || git submodule status lexflow-codex 2>/dev/null
+```
+
+- If the submodule pointer is behind remote, run `git submodule update --remote` first.
+- Working against stale governance docs is a compliance violation.
+
+**Test / lint / typecheck gate (GOV-002, GOV-003):**
+
+```bash
+# Run all quality checks (Node.js projects)
+if [ -f package.json ]; then
+  npm run lint 2>&1       || { echo "❌ LINT FAILED — fix before committing"; exit 1; }
+  npm run typecheck 2>&1  || { echo "❌ TYPECHECK FAILED — fix before committing"; exit 1; }
+  npm run test 2>&1       || { echo "❌ TESTS FAILED — fix before committing"; exit 1; }
+  echo "✅ All quality gates passed"
+fi
+```
+
+- **ALL THREE** must pass before any commit.
+- Do NOT use `--no-verify` to bypass test failures — fix the code.
+- If a test is flaky, document it in a `DEF-` report and fix the test, don't skip it.
+
+### 2e. Action for Junk
 
 | Found in... | Action |
 |:------------|:-------|
