@@ -245,16 +245,148 @@ Beyond static scanning, this tests the running, integrated application for live 
 
 ## 14. GUI, Visual & l10n Tests — "The Pixel Proof"
 
-For projects with user interfaces, verify actual rendered output and accessibility.
+For projects with user interfaces, verify actual rendered output, visual consistency, and (optionally) accessibility compliance. This tier validates what the user actually **sees and clicks** — not just what the API returns.
 
-| Technique | What It Catches |
-|:----------|:----------------|
-| Screenshot comparison | Visual regressions |
-| Element presence | Missing UI components |
-| Accessibility scanning (a11y) | WCAG compliance |
-| Localization (l10n/i18n) | UI breaks across languages, currencies, and time zones |
+**When required**: Any project with a web frontend, desktop UI, or mobile interface.
 
-**Tools**: Playwright, Cypress, Percy (visual diff), axe (accessibility)
+### 14.1 Default Framework: Playwright
+
+**Playwright** (`@playwright/test`) is the default E2E and GUI testing framework for all web projects. It provides:
+- True cross-browser testing (Chromium, Firefox, WebKit) from a single API
+- Built-in auto-waiting (no manual `sleep()` hacks)
+- Native screenshot comparison (`toHaveScreenshot()`)
+- Trace files for post-mortem debugging
+- 92% test stability rate (vs. ~81% for Cypress)
+- Free parallelization without paid services
+
+**Other tools** (Cypress, Selenium) are acceptable only with documented justification.
+
+### 14.2 Test Structure: Page Object Model
+
+All GUI tests **must** use the Page Object Model (POM) pattern:
+
+```typescript
+// pages/login.page.ts
+export class LoginPage {
+  constructor(private page: Page) {}
+
+  async goto() { await this.page.goto('/login'); }
+
+  async login(email: string, password: string) {
+    await this.page.fill('[data-testid="email"]', email);
+    await this.page.fill('[data-testid="password"]', password);
+    await this.page.click('[data-testid="sign-in"]');
+  }
+}
+```
+
+**Rules:**
+- One Page Object per distinct page or major component
+- Page Objects encapsulate selectors — test files never contain raw selectors
+- Selectors use `data-testid` attributes (resilient to CSS/structure changes)
+- If the frontend lacks `data-testid` attributes, **add them** — they are invisible to users
+
+### 14.3 Selector Strategy
+
+| Priority | Method | Example | When |
+|:---------|:-------|:--------|:-----|
+| 1 | `data-testid` | `[data-testid="submit-btn"]` | Default — always prefer |
+| 2 | ARIA role + name | `getByRole('button', { name: 'Submit' })` | Accessible elements |
+| 3 | Text content | `getByText('Sign In')` | Visible, stable labels |
+| 4 | CSS selector | `.nav-item:first-child` | Last resort only |
+
+**Never use:** XPath, auto-generated class names (e.g., `css-1k4bjh`), or positional indexes.
+
+### 14.4 Screenshot & Trace Capture
+
+Every GUI test run must produce visual evidence per §20.
+
+| Artifact | When Captured | Format | Storage |
+|:---------|:-------------|:-------|:--------|
+| **Step screenshots** | Every major action | PNG | `tests/artifacts/e2e/screenshots/{flow}/{step}.png` |
+| **Failure screenshots** | On assertion failure | PNG | Attached to HTML report |
+| **Trace files** | On first retry | ZIP (Playwright trace) | `tests/artifacts/e2e/traces/{test-name}.zip` |
+| **Video** | On first retry | WebM | `tests/artifacts/e2e/videos/` |
+
+**Playwright config for artifact capture:**
+
+```typescript
+use: {
+  screenshot: 'on',          // Every test step
+  trace: 'on-first-retry',   // Full trace on failure
+  video: 'on-first-retry',   // Video on failure
+}
+```
+
+**Viewing trace files:** `npx playwright show-trace <trace.zip>` opens an interactive viewer with DOM snapshots, network log, console log, and action timeline.
+
+### 14.5 Error Reporting
+
+GUI tests must produce an **HTML forensic report** (Playwright's built-in reporter):
+
+```typescript
+reporter: [
+  ['html', { outputFolder: './artifacts/reports' }],
+  ['list'],  // Console output
+]
+```
+
+The HTML report includes:
+- Pass/fail status for every test
+- Step-by-step screenshots
+- Error messages with stack traces
+- Attached trace files for failed tests
+- Execution time per test
+
+**Agent Rule:** After every test run, the report at `artifacts/reports/index.html` must be reviewable. "The tests passed" without a viewable report is not acceptable (Law #4).
+
+### 14.6 Visual Regression (Free Tier)
+
+Use Playwright's built-in `toHaveScreenshot()` for visual regression — no paid tools required:
+
+```typescript
+await expect(page).toHaveScreenshot('dashboard-loaded.png', {
+  maxDiffPixelRatio: 0.01,  // Allow 1% pixel variance
+});
+```
+
+**Rules:**
+- Baseline screenshots are committed to the repository
+- Update baselines intentionally: `npx playwright test --update-snapshots`
+- CI fails if screenshots differ beyond threshold
+- Projects requiring advanced visual AI (pixel-level diff, cross-browser rendering) may adopt Percy or Applitools with documented justification
+
+### 14.7 Execution Targets
+
+GUI tests should support multiple execution targets via environment variable:
+
+```bash
+# Local development
+BASE_URL=http://localhost:3000 npx playwright test
+
+# Staging/Production smoke
+BASE_URL=https://staging.example.com npx playwright test
+
+# CI pipeline
+BASE_URL=http://app:3000 npx playwright test
+```
+
+| Target | Purpose | Frequency |
+|:-------|:--------|:----------|
+| Local dev | Developer feedback | On demand |
+| CI pipeline | Gate before merge | Every PR |
+| Production | Post-deploy smoke test | After every deploy |
+
+### 14.8 Additional Techniques
+
+| Technique | What It Catches | Tool | Required? |
+|:----------|:----------------|:-----|:----------|
+| Screenshot comparison | Visual regressions | Playwright `toHaveScreenshot()` | Yes (for GUI projects) |
+| Element presence | Missing UI components | Playwright assertions | Yes |
+| Accessibility scanning | WCAG compliance | `@axe-core/playwright` | Recommended (required for public-facing apps) |
+| Localization (l10n/i18n) | UI breaks across languages, currencies, time zones | Manual + Playwright | When applicable |
+
+**Tools**: Playwright (default), axe-core (accessibility), Percy/Applitools (advanced visual; optional/paid)
 
 ---
 

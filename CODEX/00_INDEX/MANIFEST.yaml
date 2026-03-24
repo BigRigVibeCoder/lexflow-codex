@@ -203,25 +203,24 @@ documents:
     path: 05_PROJECT/SPR-005_TrustAccountingFrontend.md
     title: "Trust Accounting Frontend Sprint"
     type: sprint
-    status: PLANNING
+    status: COMPLETE
     tags: [sprint, phase-3, trust-accounting, frontend, integration]
     agents: [frontend]
     summary: >
-      Phase 3 Frontend: 8 tasks. Trust client library with circuit breaker,
+      Phase 3 Frontend COMPLETE: 8 tasks. Trust client library with circuit breaker,
       tRPC proxy router, trust dashboard/account/transaction UI,
-      reconciliation UI. First cross-service integration — Architect
-      performs contract compliance test.
+      reconciliation UI. VER-005 FULL PASS.
 
   - id: SPR-006
     path: 05_PROJECT/SPR-006_DocumentManagement.md
     title: "Document Management Sprint"
     type: sprint
-    status: PLANNING
+    status: COMPLETE
     tags: [sprint, phase-4, documents, upload, local-storage]
     agents: [frontend]
     summary: >
-      Phase 4: 8 tasks. Local disk file storage, drag-and-drop upload,
-      PDF viewer, category tagging, cross-matter document search.
+      Phase 4 COMPLETE: 8 tasks. Local disk file storage, drag-and-drop upload,
+      PDF viewer, category tagging, cross-matter document search. VER-006 FULL PASS.
 
   - id: SPR-007
     path: 05_PROJECT/SPR-007_TimeBilling.md
@@ -239,14 +238,50 @@ documents:
     path: 05_PROJECT/SPR-008_PolishHardening.md
     title: "Polish & Hardening Sprint"
     type: sprint
-    status: PLANNING
+    status: ACTIVE
     tags: [sprint, phase-6, security, testing, production, hardening]
     agents: [frontend, backend]
     summary: >
-      Phase 6: 10 tasks. TLS, VM hardening, Sentry monitoring, rate
-      limiting, security headers, AES-256 encryption at rest, Playwright
-      E2E suite (6 workflows), k6 performance tests, backup/restore
-      verification, zero-downtime deploy.
+      Phase 6 backend COMPLETE: 5 tasks. Coverage threshold gate (80%),
+      LOG_FILE pino transport, nginx TLS, PM2 cluster mode, deploy/rollback
+      scripts. VER-008 FULL PASS. Frontend hardening tasks remaining.
+
+  - id: SPR-009-ARCH
+    path: 05_PROJECT/SPR-009-ARCH_E2E_Testing.md
+    title: "Architect Sprint — E2E Testing"
+    type: sprint
+    status: PLANNED
+    tags: [sprint, architect, e2e, playwright, testing]
+    agents: [architect]
+    summary: >
+      8 architect-owned tasks: scaffold Playwright, page objects, 6 critical
+      flow tests (login, client/matter, billing, trust, documents, SOL).
+      Executed against lexflow-prod. Phase 1 (4 flows) starts now;
+      Phase 2 (2 flows) after SPR-007.
+
+  - id: HND-SPR-007
+    path: 05_PROJECT/HND-SPR-007_Frontend_Handoff.md
+    title: "Frontend Handoff — SPR-007 Time & Billing"
+    type: planning
+    status: ACTIVE
+    tags: [handoff, sprint, frontend, time-billing]
+    agents: [frontend]
+    summary: >
+      Handoff doc for frontend agent to begin SPR-007 (Time & Billing).
+      13 tasks (T-063–T-075), currency as integer cents, timer widget,
+      invoice wizard, payment recording with trust transfer.
+
+  - id: HND-COV-001
+    path: 05_PROJECT/HND-COV-001_Backend_Coverage_Handoff.md
+    title: "Backend Handoff — Coverage Ramp"
+    type: planning
+    status: ACTIVE
+    tags: [handoff, backend, testing, coverage]
+    agents: [backend]
+    summary: >
+      Handoff doc for backend agent coverage ramp (42.87% → 80%).
+      Integration tests against real database paths to satisfy the
+      coverage threshold gate installed in T-087.
 
   # ── 10_GOVERNANCE ───────────────────────────────────────────────────────────
   - id: GOV-001
@@ -271,7 +306,8 @@ documents:
       17-tier testing cascade: IaC → Static Fortress → Unit → Property →
       Snapshot → Mutation → Integration → Contract → Fuzz → E2E → DAST →
       GUI/Visual → Performance → Chaos → Soak → UAT → HIL.
-      Fail-fast execution order, forensic artifacts, traceability matrix.
+      Fail-fast execution, forensic artifacts, traceability matrix.
+      §14 expanded with Playwright-based GUI testing governance (v2.1).
 
   - id: GOV-003
     path: 10_GOVERNANCE/GOV-003_CodingStandard.md
