@@ -1,0 +1,4 @@
+# E2E Test Artifacts (generated per run — do not commit)
+artifacts/
+node_modules/
+dist/
