@@ -1,7 +1,6 @@
 import { test, expect } from '../fixtures/auth.fixture';
 import { DocumentsPage } from '../pages/documents.page';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import * as path from 'path';
 
 /**
  * Flow 5: Document Upload → View in PDF Viewer
@@ -11,7 +10,7 @@ import { dirname, join } from 'path';
  * Refs: SPR-006 (Document Management), SPR-009-ARCH (A-E2E-007)
  */
 test.describe('Flow 5: Document Management', () => {
-  const samplePdfPath = join(dirname(fileURLToPath(import.meta.url)), '..', 'fixtures', 'sample.pdf');
+  const samplePdfPath = path.resolve(process.cwd(), 'fixtures', 'sample.pdf');
 
   test('should upload a document and view it', async ({ authenticatedPage }) => {
     const page = authenticatedPage;

@@ -50,5 +50,7 @@ export class DashboardPage {
       '[data-testid="logout"], button:has-text("Logout"), button:has-text("Sign Out"), a:has-text("Logout")'
     ).first();
     await logoutBtn.click();
+    // Wait for redirect to login after signout
+    await this.page.waitForURL('**/login**', { timeout: 15_000 });
   }
 }

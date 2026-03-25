@@ -24,7 +24,7 @@ export default defineConfig({
 
   use: {
     /* Target: lexflow-prod by default */
-    baseURL: process.env.BASE_URL || 'http://34.73.108.242',
+    baseURL: process.env.BASE_URL || 'http://34.26.122.46',
 
     /* GOV-002 §14.4: Screenshot & trace capture */
     screenshot: 'on',           // Capture at every step
