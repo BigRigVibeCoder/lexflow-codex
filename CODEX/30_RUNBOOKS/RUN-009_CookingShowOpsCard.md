@@ -6,13 +6,17 @@ status: ACTIVE
 owner: architect
 agents: [none]
 tags: [training, cooking-show, operations, checkpoint, recovery]
-related: [RUN-007, SPR-008]
+related: [RUN-007, RUN-008, SPR-008]
 created: 2026-03-25
 updated: 2026-03-25
 version: 1.0.0
 ---
 
-> **BLUF:** This is the single source of truth for the Day 2 cooking show's technical state. Every checkpoint, every credential, every recovery command. If something breaks during the demo, you and the architect agent read THIS document to get back on track. Companion to [RUN-007](file:///home/bdavidriggins/Documents/train_agentic_architect/CODEX/30_INSTRUCTOR_GUIDES/RUN-007_CookingShowGuide.md).
+> **BLUF:** This is the single source of truth for the Day 2 cooking show's technical state. Every checkpoint, every credential, every recovery command. If something breaks during the demo, you and the architect agent read THIS document to get back on track.
+>
+> **Companion docs:**
+> - [RUN-007](file:///home/bdavidriggins/Documents/train_agentic_architect/CODEX/30_INSTRUCTOR_GUIDES/RUN-007_CookingShowGuide.md) — The teaching plan (phases, prompts, sous chef hooks)
+> - [RUN-008](file:///home/bdavidriggins/Documents/train_agentic_architect/CODEX/30_INSTRUCTOR_GUIDES/RUN-008_CookingShowCheckpointPrep.md) — Checkpoint strategy (what to tag, why, demo flow pacing)
 
 ---
 
@@ -72,26 +76,52 @@ version: 1.0.0
 > **How to jump:** `git checkout <tag>` in the relevant repo.
 > **How to return:** `git checkout main`
 
-| Tag | Repo | Commit | What You Get | Jump When |
+### Live vs Pre-baked (per RUN-008 strategy)
+
+| Phase | Type | Teaching Value |
+|:------|:----:|:---------------|
+| Research (cp-0, cp-1) | 🎤 Live | Students watch the Architect think |
+| Architecture (cp-2) | 🎤 Live | Students see CODEX/contracts created |
+| Backend sprint (cp-3) | ⏩ Tag | "20 min later, here's what came out" |
+| Frontend sprint (cp-4) | ⏩ Tag | "Meanwhile, the frontend agent produced this" |
+| Audit (cp-6) | ⏩ Tag | "Now the architect audits both sprints" |
+| Deploy (cp-5, cp-7) | 🎤 Live | Show the deploy, then walk through |
+
+### Tagged Checkpoints (current state)
+
+| Tag | Repo | Commit | What You Get | Demo Step |
 |:----|:-----|:-------|:-------------|:----------|
-| `cp-3-backend` | lexflow-backend | `fb280e3` | Trust service, backup scripts, all tests pass | Phase 3 runs long |
-| `cp-4-frontend` | lexflow-frontend | `d6f00ca` | Full UI: auth, matters, trust, billing, docs, 193 tests | Phase 3/4 runs long |
-| `cp-5-deployed` | lexflow-codex | `b9c39e8` | Deployed state marker | Deploy fails |
-| `cp-6-audit` | lexflow-codex | `b9c39e8` | E2E suite, VER/DEF reports, handoffs | Audit phase |
-| `cp-7-deployed` | lexflow-codex | `b9c39e8` | Final CODEX state | End of show |
+| `cp-3-backend` | lexflow-backend | `fb280e3` | Trust service, backup scripts, all tests pass | Step 5 |
+| `cp-4-frontend` | lexflow-frontend | `d6f00ca` | Full UI: auth, matters, trust, billing, docs, 193 tests | Step 6 |
+| `cp-5-deployed` | lexflow-codex | `f84a275` | Deployed state marker | Step 8 |
+| `cp-6-audit` | lexflow-codex | `b9c39e8` | E2E suite, VER/DEF reports, handoffs | Step 7 |
+| `cp-7-deployed` | lexflow-codex | `f84a275` | Final CODEX state | End |
+
+### Demo Flow (from RUN-008 §Day 2 Demo Flow)
+
+```
+1. Open agentic_architect template    → "Here's what you start with"
+2. 🎤 LIVE: DarkGravity research      → ~20 min
+3. 🎤 LIVE: Build CODEX + contracts   → ~40 min
+4. Show handoff to backend agent      → "Watch what happens"
+5. git checkout cp-3-backend          → "20 min later, here's the output"
+6. git checkout cp-4-frontend         → "Meanwhile, the frontend agent..."
+7. git checkout cp-6-audit            → "Now the architect audits"
+8. git checkout cp-5-deployed          → "And it deploys to production"
+```
 
 ### Quick Jump Commands
 
 ```bash
-# ── Fast-forward to backend complete ──
+# ── Fast-forward to backend complete (step 5) ──
 cd ~/Documents/lexflow/lexflow-backend
 git checkout cp-3-backend
-# "Here's the backend — trust service, 17 routes, all tests passing."
+# "20 minutes later, here's what came out. 17 routes, all tests passing."
 
-# ── Fast-forward to frontend complete ──
+# ── Fast-forward to frontend complete (step 6) ──
 cd ~/Documents/lexflow/lexflow-frontend
 git checkout cp-4-frontend
-# "Frontend is done — auth, matters, trust UI, billing, documents."
+# "Meanwhile, the frontend agent produced this."
 
 # ── Return to latest ──
 git checkout main
