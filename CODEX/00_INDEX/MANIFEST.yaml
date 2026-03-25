@@ -442,6 +442,29 @@ documents:
       Backend ESLint references typescript-eslint but package not in
       devDependencies (GOV-003 violation). Fixed — package added.
 
+  - id: DEF-007
+    path: 50_DEFECTS/DEF-007_NextAuth_v4v5_Mismatch.md
+    title: "NextAuth v4/v5 API Mismatch — 500 on Login"
+    type: reference
+    status: CLOSED
+    tags: [bug, authentication, nextauth, production, frontend]
+    agents: [frontend, architect]
+    summary: >
+      Production login HTTP 500: next-auth@4.24.13 installed but codebase
+      used v5 API patterns. Fixed 4 files to v4 pattern. Commit e2f4924.
+
+  - id: HND-DEF-007
+    path: 05_PROJECT/HND-DEF-007_NextAuth_Fix_Handoff.md
+    title: "Handoff: NextAuth v4 Auth Fix — Frontend Agent"
+    type: handoff
+    status: ACTIVE
+    tags: [handoff, authentication, nextauth, breaking-change, frontend]
+    agents: [frontend]
+    summary: >
+      CRITICAL handoff: @/lib/auth API changed. Exports authOptions
+      (not handlers/auth). Use getServerSession(authOptions). v5 upgrade
+      deferred to EVO proposal during SPR-008.
+
   # ── 20_BLUEPRINTS ──────────────────────────────────────────────────────────
   - id: BLU-ARCH-001
     path: 20_BLUEPRINTS/BLU-ARCH-001_LexFlow_Architecture.md
