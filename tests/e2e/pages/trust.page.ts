@@ -3,113 +3,113 @@ import { type Page, expect } from '@playwright/test';
 /**
  * Trust Accounts Page Object Model
  *
- * Refs: SPR-004 (Trust Accounting Backend), SPR-005 (Trust Accounting Frontend)
+ * Source: src/app/(dashboard)/trust/page.tsx, trust/accounts/page.tsx,
+ *   trust/accounts/new/page.tsx, trust/transactions/deposit/page.tsx,
+ *   trust/transactions/disburse/page.tsx
+ *
+ * Routes:
+ *   /trust (dashboard), /trust/accounts (list), /trust/accounts/new (create),
+ *   /trust/transactions/deposit, /trust/transactions/disburse
+ *
+ * Refs: SPR-004, SPR-005 (Trust Accounting)
  */
 export class TrustPage {
   constructor(private page: Page) {}
 
-  /** Navigate to trust accounts list */
+  /** Navigate to trust dashboard */
   async goto(): Promise<void> {
     await this.page.goto('/trust');
   }
 
-  /** Click "New Account" */
-  async clickNewAccount(): Promise<void> {
-    const newBtn = this.page.locator(
-      '[data-testid="new-trust-btn"], [data-testid="new-trust-account"], button:has-text("New Account"), button:has-text("Create Account")'
-    ).first();
-    await newBtn.click();
+  /** Navigate to trust accounts list */
+  async gotoAccounts(): Promise<void> {
+    await this.page.goto('/trust/accounts');
   }
 
-  /** Fill trust account creation form */
+  /** Navigate directly to new account form */
+  async gotoNewAccount(): Promise<void> {
+    await this.page.goto('/trust/accounts/new');
+  }
+
+  /** Click "New Account" on the accounts list page */
+  async clickNewAccount(): Promise<void> {
+    await this.page.locator('[data-testid="new-trust-btn"]').click();
+    await this.page.waitForURL('**/trust/accounts/new**', { timeout: 10_000 });
+  }
+
+  /**
+   * Fill trust account creation form
+   * Source: trust/accounts/new/page.tsx
+   * testids: bank-name, account-number, routing-number, account-name, account-type, submit-account
+   */
   async fillAccountForm(data: {
-    name: string;
     bankName: string;
     accountNumber: string;
+    routingNumber: string;
+    accountName: string;
+    accountType?: 'iolta' | 'operating';
   }): Promise<void> {
-    await this.page.locator(
-      '[data-testid="account-name"], input[name="name"]'
-    ).first().fill(data.name);
-
-    await this.page.locator(
-      '[data-testid="bank-name"], input[name="bankName"]'
-    ).first().fill(data.bankName);
-
-    await this.page.locator(
-      '[data-testid="account-number"], input[name="accountNumber"]'
-    ).first().fill(data.accountNumber);
+    await this.page.locator('[data-testid="bank-name"]').fill(data.bankName);
+    await this.page.locator('[data-testid="account-number"]').fill(data.accountNumber);
+    await this.page.locator('[data-testid="routing-number"]').fill(data.routingNumber);
+    await this.page.locator('[data-testid="account-name"]').fill(data.accountName);
+    if (data.accountType) {
+      await this.page.locator('[data-testid="account-type"]').selectOption(data.accountType);
+    }
   }
 
   /** Submit account form */
-  async submitForm(): Promise<void> {
-    const submitBtn = this.page.locator(
-      'button[type="submit"], button:has-text("Create"), button:has-text("Save")'
-    ).first();
-    await submitBtn.click();
+  async submitAccountForm(): Promise<void> {
+    await this.page.locator('[data-testid="submit-account"]').click();
   }
 
-  /** Create a deposit transaction */
-  async createDeposit(amountCents: number, source: string): Promise<void> {
-    const depositBtn = this.page.locator(
-      '[data-testid="new-deposit"], button:has-text("Deposit"), button:has-text("New Deposit")'
-    ).first();
-    await depositBtn.click();
-
-    // Amount in dollars (display) — input as formatted string
-    const amountDollars = (amountCents / 100).toFixed(2);
-    await this.page.locator(
-      '[data-testid="deposit-amount"], input[name="amount"]'
-    ).first().fill(amountDollars);
-
-    await this.page.locator(
-      '[data-testid="deposit-source"], input[name="source"]'
-    ).first().fill(source);
-
-    await this.page.locator(
-      'button[type="submit"], button:has-text("Submit"), button:has-text("Confirm")'
-    ).first().click();
+  /**
+   * Navigate to deposit page
+   * Source: trust/transactions/deposit/page.tsx
+   */
+  async gotoDeposit(): Promise<void> {
+    await this.page.goto('/trust/transactions/deposit');
   }
 
-  /** Create a disbursement transaction */
-  async createDisbursement(amountCents: number, payee: string): Promise<void> {
-    const disburseBtn = this.page.locator(
-      '[data-testid="new-disbursement"], button:has-text("Disburse"), button:has-text("New Disbursement")'
-    ).first();
-    await disburseBtn.click();
-
-    const amountDollars = (amountCents / 100).toFixed(2);
-    await this.page.locator(
-      '[data-testid="disbursement-amount"], input[name="amount"]'
-    ).first().fill(amountDollars);
-
-    await this.page.locator(
-      '[data-testid="disbursement-payee"], input[name="payee"]'
-    ).first().fill(payee);
-
-    await this.page.locator(
-      'button[type="submit"], button:has-text("Submit"), button:has-text("Confirm")'
-    ).first().click();
+  /**
+   * Fill deposit form
+   * testids: deposit-amount, payor-name, deposit-desc, payment-method, ref-number, submit-deposit
+   */
+  async fillDepositForm(data: {
+    amount: string;
+    payorName: string;
+    description?: string;
+    paymentMethod?: string;
+  }): Promise<void> {
+    await this.page.locator('[data-testid="deposit-amount"]').fill(data.amount);
+    await this.page.locator('[data-testid="payor-name"]').fill(data.payorName);
+    if (data.description) {
+      await this.page.locator('[data-testid="deposit-desc"]').fill(data.description);
+    }
+    if (data.paymentMethod) {
+      await this.page.locator('[data-testid="payment-method"]').selectOption(data.paymentMethod);
+    }
   }
 
-  /** Get the displayed balance text */
-  async getBalance(): Promise<string | null> {
-    const balanceEl = this.page.locator(
-      '[data-testid="account-balance"], [class*="balance"]'
-    ).first();
-    return await balanceEl.textContent();
+  /** Submit deposit */
+  async submitDeposit(): Promise<void> {
+    await this.page.locator('[data-testid="submit-deposit"]').click();
   }
 
-  /** Get ledger entry count */
-  async getLedgerEntryCount(): Promise<number> {
-    const entries = this.page.locator(
-      '[data-testid*="ledger-entry"], table tbody tr, [class*="ledger-row"]'
-    );
-    return await entries.count();
+  /** Navigate to disburse page */
+  async gotoDisburse(): Promise<void> {
+    await this.page.goto('/trust/transactions/disburse');
   }
 
-  /** Verify trust page loaded */
+  /** Verify trust dashboard loaded */
   async verifyLoaded(): Promise<void> {
-    await expect(this.page.locator('h1, h2, [data-testid="trust-heading"]').first())
+    await expect(this.page.locator('[data-testid="trust-dashboard-page"]'))
+      .toBeVisible({ timeout: 10_000 });
+  }
+
+  /** Verify accounts list loaded */
+  async verifyAccountsLoaded(): Promise<void> {
+    await expect(this.page.locator('[data-testid="trust-accounts-page"]'))
       .toBeVisible({ timeout: 10_000 });
   }
 }

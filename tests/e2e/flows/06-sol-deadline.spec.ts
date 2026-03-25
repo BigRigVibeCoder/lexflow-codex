@@ -1,49 +1,60 @@
 import { test, expect } from '../fixtures/auth.fixture';
-import { MattersPage } from '../pages/matters.page';
 import { DashboardPage } from '../pages/dashboard.page';
+import { MattersPage } from '../pages/matters.page';
 
 /**
- * Flow 6: SOL Deadline on Dashboard
+ * Flow 6: SOL Deadline — Create Matter with Date → Verify on Dashboard
  *
- * Validates that a matter's Statute of Limitations deadline
- * appears on the dashboard.
+ * Source-verified against: matters/new/page.tsx (wizard),
+ *   dashboard/page.tsx (kpi-upcoming-deadlines)
  *
- * Refs: SPR-003 (Matter Management — SOL tracking), SPR-009-ARCH (A-E2E-008)
+ * Refs: SPR-003 (SOL tracking), SPR-009-ARCH (A-E2E-008)
  */
 test.describe('Flow 6: SOL Deadline', () => {
-  const solDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
-    .toISOString()
-    .split('T')[0]; // 30 days from now
+  const ts = Date.now();
 
-  const testMatter = {
-    title: `SOL Test Matter ${Date.now()}`,
-    description: 'E2E test for SOL deadline visibility',
-    solDate,
-  };
-
-  test('should show SOL deadline on dashboard', async ({ authenticatedPage }) => {
+  test('should create matter with deadline via wizard', async ({ authenticatedPage }) => {
     const page = authenticatedPage;
     const mattersPage = new MattersPage(page);
+
+    // Navigate to matters and start wizard
+    await mattersPage.goto();
+    await mattersPage.verifyLoaded();
+    await mattersPage.clickNewMatter();
+
+    // Step 1: Select Client
+    await mattersPage.selectClient('E2E Test');
+    await mattersPage.clickNext();
+
+    // Step 2: Case Details — fill title + accident date
+    const futureDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+      .toISOString().split('T')[0];
+    await mattersPage.fillCaseDetails({
+      title: `SOL Test Matter ${ts}`,
+      accidentDate: futureDate,
+      description: 'E2E SOL deadline test',
+    });
+    await mattersPage.clickNext();
+
+    // Step 3: Fee Arrangement — accept defaults
+    await mattersPage.clickNext();
+
+    // Step 4: Insurance — skip
+    await mattersPage.clickNext();
+
+    // Step 5: Review + Submit
+    await mattersPage.submitMatter();
+    await page.waitForTimeout(2000);
+  });
+
+  test('should show deadline KPI on dashboard', async ({ authenticatedPage }) => {
+    const page = authenticatedPage;
     const dashboardPage = new DashboardPage(page);
 
-    // Create a matter with SOL date 30 days out
-    await mattersPage.goto();
-    await mattersPage.clickNewMatter();
-    await mattersPage.fillMatterForm(testMatter);
-    await mattersPage.submitForm();
-    await page.waitForTimeout(2000);
-
-    // Navigate to dashboard
     await dashboardPage.goto();
     await dashboardPage.verifyLoaded();
 
-    // Look for SOL-related content on dashboard
-    const solWidget = page.locator(
-      '[data-testid*="sol"], [data-testid*="deadline"], [class*="sol"], [class*="deadline"], text=/statute/i, text=/SOL/i'
-    ).first();
-
-    // Verify SOL widget/section exists
-    const hasSolWidget = await solWidget.isVisible().catch(() => false);
-    expect(hasSolWidget).toBe(true);
+    // Verify "Upcoming Deadlines (7d)" KPI card exists
+    await expect(page.locator('[data-testid="kpi-upcoming-deadlines"]')).toBeVisible();
   });
 });

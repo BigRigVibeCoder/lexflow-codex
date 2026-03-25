@@ -33,7 +33,7 @@ export default defineConfig({
 
     /* Timeouts */
     actionTimeout: 10_000,      // 10s per action
-    navigationTimeout: 15_000,  // 15s per navigation
+    navigationTimeout: 30_000,  // 30s per navigation (Next.js SSR can be slow)
   },
 
   /* Output directories for artifacts */

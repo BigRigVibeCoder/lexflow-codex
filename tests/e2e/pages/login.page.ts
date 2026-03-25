@@ -3,8 +3,8 @@ import { type Page } from '@playwright/test';
 /**
  * Login Page Object Model
  *
- * Encapsulates all selectors and actions for the login page.
- * Per GOV-002 §14.2: selectors use data-testid, fallback to role/text.
+ * Source: src/app/(auth)/login/page.tsx
+ * Verified testids: email, password, sign-in, error-message, login-page
  *
  * Refs: SPR-002 (Auth/RBAC), CON-001
  */
@@ -18,27 +18,14 @@ export class LoginPage {
 
   /** Fill credentials and submit the login form */
   async login(email: string, password: string): Promise<void> {
-    // Try data-testid first, fall back to common selectors
-    const emailInput = this.page.locator(
-      '[data-testid="email"], input[name="email"], input[type="email"]'
-    ).first();
-    const passwordInput = this.page.locator(
-      '[data-testid="password"], input[name="password"], input[type="password"]'
-    ).first();
-    const submitButton = this.page.locator(
-      '[data-testid="sign-in"], button[type="submit"]'
-    ).first();
-
-    await emailInput.fill(email);
-    await passwordInput.fill(password);
-    await submitButton.click();
+    await this.page.locator('[data-testid="email"]').fill(email);
+    await this.page.locator('[data-testid="password"]').fill(password);
+    await this.page.locator('[data-testid="sign-in"]').click();
   }
 
   /** Get the error message text (if any) */
   async getErrorMessage(): Promise<string | null> {
-    const errorEl = this.page.locator(
-      '[data-testid="error-message"], [role="alert"], .text-red-500, .error-message'
-    ).first();
+    const errorEl = this.page.locator('[data-testid="error-message"]');
     try {
       await errorEl.waitFor({ state: 'visible', timeout: 5000 });
       return await errorEl.textContent();

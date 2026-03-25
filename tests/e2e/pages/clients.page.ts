@@ -3,6 +3,12 @@ import { type Page, expect } from '@playwright/test';
 /**
  * Clients Page Object Model
  *
+ * Source: src/app/(dashboard)/clients/page.tsx + clients/new/page.tsx
+ * Routes: /clients (list), /clients/new (create form)
+ *
+ * List testids: client-list-page, new-client-btn (Link to /clients/new), client-search, client-table
+ * Form testids: new-client-page, firstName, lastName, email, phone, submit-client
+ *
  * Refs: SPR-003 (Matter Management — client creation)
  */
 export class ClientsPage {
@@ -13,57 +19,39 @@ export class ClientsPage {
     await this.page.goto('/clients');
   }
 
-  /** Click "New Client" button */
+  /** Click "New Client" — this is a Link that navigates to /clients/new */
   async clickNewClient(): Promise<void> {
-    const newBtn = this.page.locator(
-      '[data-testid="new-client-btn"], [data-testid="new-client"], button:has-text("New Client"), button:has-text("Add Client"), a:has-text("New Client")'
-    ).first();
-    await newBtn.click();
+    await this.page.locator('[data-testid="new-client-btn"]').click();
+    await this.page.waitForURL('**/clients/new**', { timeout: 10_000 });
   }
 
-  /** Fill the client creation form */
+  /** Fill the client creation form (on /clients/new) */
   async fillClientForm(data: {
-    name: string;
+    firstName: string;
+    lastName: string;
     email: string;
     phone: string;
   }): Promise<void> {
-    await this.page.locator(
-      '[data-testid="client-name"], input[name="name"], input[placeholder*="name" i]'
-    ).first().fill(data.name);
-
-    await this.page.locator(
-      '[data-testid="client-email"], input[name="email"], input[type="email"]'
-    ).first().fill(data.email);
-
-    await this.page.locator(
-      '[data-testid="client-phone"], input[name="phone"], input[type="tel"]'
-    ).first().fill(data.phone);
+    await this.page.locator('[data-testid="firstName"]').fill(data.firstName);
+    await this.page.locator('[data-testid="lastName"]').fill(data.lastName);
+    await this.page.locator('[data-testid="email"]').fill(data.email);
+    await this.page.locator('[data-testid="phone"]').fill(data.phone);
   }
 
   /** Submit the client form */
   async submitForm(): Promise<void> {
-    const submitBtn = this.page.locator(
-      '[data-testid="submit-client"], button[type="submit"], button:has-text("Create"), button:has-text("Save")'
-    ).first();
-    await submitBtn.click();
+    await this.page.locator('[data-testid="submit-client"]').click();
   }
 
-  /** Get count of clients in the list */
+  /** Get count of client rows in the table */
   async getClientCount(): Promise<number> {
-    const rows = this.page.locator(
-      '[data-testid*="client-row"], table tbody tr, [class*="client-item"]'
-    );
+    const rows = this.page.locator('[data-testid="client-table"] tbody tr');
     return await rows.count();
-  }
-
-  /** Click on a client by name */
-  async openClient(name: string): Promise<void> {
-    await this.page.locator(`text=${name}`).first().click();
   }
 
   /** Verify the client list page is loaded */
   async verifyLoaded(): Promise<void> {
-    await expect(this.page.locator('h1, h2, [data-testid="clients-heading"]').first())
+    await expect(this.page.locator('[data-testid="client-list-page"]'))
       .toBeVisible({ timeout: 10_000 });
   }
 }

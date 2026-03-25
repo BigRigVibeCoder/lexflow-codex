@@ -6,33 +6,28 @@ import { TEST_USERS } from '../fixtures/auth.fixture';
 /**
  * Flow 1: Login → Dashboard
  *
- * Validates the authentication flow and dashboard rendering.
- * This is the most fundamental flow — if this fails, nothing else works.
+ * Validates authentication flow and dashboard rendering.
+ * Source-verified against: login/page.tsx, dashboard/page.tsx, dashboard-shell.tsx
  *
  * Refs: SPR-002 (Auth/RBAC), SPR-009-ARCH (A-E2E-003)
  */
 test.describe('Flow 1: Login → Dashboard', () => {
   test('should redirect unauthenticated user to login', async ({ page }) => {
     await page.goto('/dashboard');
-    // Should redirect to login
     await expect(page).toHaveURL(/.*login.*/);
-    // Login form should be visible
-    await expect(page.locator('input[type="email"], input[name="email"], [data-testid="email"]').first())
-      .toBeVisible();
-    await expect(page.locator('input[type="password"], input[name="password"], [data-testid="password"]').first())
-      .toBeVisible();
+    await expect(page.locator('[data-testid="email"]')).toBeVisible();
+    await expect(page.locator('[data-testid="password"]')).toBeVisible();
   });
 
   test('should reject invalid credentials', async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.goto();
-
     await loginPage.login('wrong@example.com', 'WrongPassword123');
 
     // Should stay on login page
     await expect(page).toHaveURL(/.*login.*/);
 
-    // Error message should appear
+    // Error message with data-testid="error-message" should appear
     const errorMsg = await loginPage.getErrorMessage();
     expect(errorMsg).not.toBeNull();
   });
@@ -41,19 +36,19 @@ test.describe('Flow 1: Login → Dashboard', () => {
     const loginPage = new LoginPage(page);
     const dashboardPage = new DashboardPage(page);
 
-    // Navigate to login
     await loginPage.goto();
-    await expect(page).toHaveURL(/.*login.*/);
-
-    // Login with admin credentials
     await loginPage.login(TEST_USERS.admin.email, TEST_USERS.admin.password);
 
-    // Verify redirect to dashboard
+    // Verify dashboard loaded
     await dashboardPage.verifyLoaded();
 
-    // Verify navigation is present
+    // Verify sidebar navigation
     const hasSidebar = await dashboardPage.isSidebarVisible();
     expect(hasSidebar).toBe(true);
+
+    // Verify KPI cards exist (4 cards in dashboard/page.tsx)
+    const kpiCount = await dashboardPage.getKpiCards();
+    expect(kpiCount).toBeGreaterThanOrEqual(4);
   });
 
   test('should logout and return to login page', async ({ page }) => {
@@ -65,7 +60,8 @@ test.describe('Flow 1: Login → Dashboard', () => {
     await loginPage.login(TEST_USERS.admin.email, TEST_USERS.admin.password);
     await dashboardPage.verifyLoaded();
 
-    // Logout
+    // Click Sign Out (data-testid="logout")
+    // signOut({ callbackUrl: '/login' }) → redirects to /login
     await dashboardPage.logout();
 
     // Should return to login
