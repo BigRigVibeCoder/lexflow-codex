@@ -21,7 +21,7 @@ export class DashboardPage {
 
     // Look for navigation sidebar or dashboard heading
     const dashboard = this.page.locator(
-      '[data-testid="dashboard"], h1, [role="main"]'
+      '[data-testid="dashboard-page"], [data-testid="dashboard"], h1, [role="main"]'
     ).first();
     await expect(dashboard).toBeVisible({ timeout: 10_000 });
   }

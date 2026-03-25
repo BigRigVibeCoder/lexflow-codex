@@ -16,7 +16,7 @@ export class MattersPage {
   /** Click "New Matter" button */
   async clickNewMatter(): Promise<void> {
     const newBtn = this.page.locator(
-      '[data-testid="new-matter"], button:has-text("New Matter"), button:has-text("Add Matter"), a:has-text("New Matter")'
+      '[data-testid="new-matter-btn"], [data-testid="new-matter"], button:has-text("New Matter"), button:has-text("Add Matter"), a:has-text("New Matter")'
     ).first();
     await newBtn.click();
   }

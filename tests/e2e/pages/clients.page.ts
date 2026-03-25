@@ -16,7 +16,7 @@ export class ClientsPage {
   /** Click "New Client" button */
   async clickNewClient(): Promise<void> {
     const newBtn = this.page.locator(
-      '[data-testid="new-client"], button:has-text("New Client"), button:has-text("Add Client"), a:has-text("New Client")'
+      '[data-testid="new-client-btn"], [data-testid="new-client"], button:has-text("New Client"), button:has-text("Add Client"), a:has-text("New Client")'
     ).first();
     await newBtn.click();
   }

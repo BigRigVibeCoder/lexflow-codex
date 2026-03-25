@@ -16,7 +16,7 @@ export class TrustPage {
   /** Click "New Account" */
   async clickNewAccount(): Promise<void> {
     const newBtn = this.page.locator(
-      '[data-testid="new-trust-account"], button:has-text("New Account"), button:has-text("Create Account")'
+      '[data-testid="new-trust-btn"], [data-testid="new-trust-account"], button:has-text("New Account"), button:has-text("Create Account")'
     ).first();
     await newBtn.click();
   }
