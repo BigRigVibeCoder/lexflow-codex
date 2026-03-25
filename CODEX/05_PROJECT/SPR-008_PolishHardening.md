@@ -255,6 +255,78 @@ version: 1.1.0
 
 ---
 
+## E2E Testability Tasks (New — From First E2E Run)
+
+> These tasks add `data-testid` attributes required for Playwright E2E tests to locate interactive elements.
+> **Prerequisite for T-083.** Without these, the E2E suite cannot interact with the UI.
+> Ref: First E2E run (2026-03-25) — 3/12 passed, 6 failed on selector mismatches.
+
+### T-094: Auth Component Test IDs
+- **Commit:** `feat(SPR-008): T-094 auth component data-testid`
+- **Agent:** Frontend
+- **Deliverable:**
+  - Login form: `data-testid="email"`, `data-testid="password"`, `data-testid="sign-in"`
+  - Sign Out button: `data-testid="logout"`
+  - Error message: `data-testid="error-message"`
+- **Acceptance:** Playwright can locate all auth elements via `data-testid`.
+- **Status:** [ ] Not Started
+
+### T-095: Client/Matter CRUD Test IDs
+- **Commit:** `feat(SPR-008): T-095 client-matter data-testid`
+- **Agent:** Frontend
+- **Deliverable:**
+  - Clients page: `data-testid="new-client-btn"`, `data-testid="client-name"`, `data-testid="client-email"`, `data-testid="client-phone"`, `data-testid="client-save"`
+  - Client rows: `data-testid="client-row"`
+  - Matters page: `data-testid="new-matter-btn"`, `data-testid="matter-title"`, `data-testid="matter-description"`, `data-testid="matter-client"`, `data-testid="matter-save"`
+  - Matter rows: `data-testid="matter-row"`
+- **Acceptance:** E2E Flow 2 (client → matter) passes.
+- **Status:** [ ] Not Started
+
+### T-096: Trust Accounting Test IDs
+- **Commit:** `feat(SPR-008): T-096 trust data-testid`
+- **Agent:** Frontend
+- **Deliverable:**
+  - Trust page navigation: sidebar link accessible
+  - Trust account creation: `data-testid="new-trust-btn"`, form inputs with testids
+  - Transaction forms: deposit/disburse inputs with testids
+  - Balance display: `data-testid="trust-balance"`
+- **Acceptance:** E2E Flow 4 (trust accounting) passes.
+- **Status:** [ ] Not Started
+
+### T-097: Document Management Test IDs
+- **Commit:** `feat(SPR-008): T-097 documents data-testid`
+- **Agent:** Frontend
+- **Deliverable:**
+  - Documents page: `data-testid="documents-tab"`, `data-testid="documents-heading"`
+  - Upload: visible `input[type="file"]` or `data-testid="upload-btn"`
+  - Document rows: `data-testid="document-row"`
+  - PDF viewer: `data-testid="pdf-viewer"`
+- **Acceptance:** E2E Flow 5 (document upload) passes.
+- **Status:** [ ] Not Started
+
+### T-098: Billing Page Test IDs
+- **Commit:** `feat(SPR-008): T-098 billing data-testid`
+- **Agent:** Frontend
+- **Deliverable:**
+  - Time entry page: `data-testid="new-time-entry"`, form fields with testids
+  - Invoice wizard: step indicators, line items, submit button with testids
+  - Payment form: amount, method, submit with testids
+  - Dashboard KPIs: `data-testid="kpi-*"` for each card
+- **Acceptance:** E2E Flow 3 (time → billing) can be unskipped and passes.
+- **Status:** [ ] Not Started
+
+### T-099: Dashboard & Navigation Test IDs
+- **Commit:** `feat(SPR-008): T-099 dashboard-nav data-testid`
+- **Agent:** Frontend
+- **Deliverable:**
+  - Sidebar: `data-testid="sidebar"`, each nav link (e.g., `data-testid="nav-clients"`)
+  - Dashboard: `data-testid="dashboard"`, KPI stat cards
+  - SOL deadline widget: `data-testid="sol-widget"`
+- **Acceptance:** E2E Flows 1 and 6 (dashboard, SOL) pass.
+- **Status:** [ ] Not Started
+
+---
+
 ## Sprint Checklist
 
 | Task | Agent | Category | Status |
@@ -277,12 +349,18 @@ version: 1.1.0
 | T-091 | Architect | FMEA Trust Accounting | [ ] |
 | T-092 | Architect | Post-Incident Runbook | [ ] |
 | T-093 | Architect | Traceability Matrix | [ ] |
+| T-094 | Frontend | Auth Test IDs | [ ] |
+| T-095 | Frontend | Client/Matter Test IDs | [ ] |
+| T-096 | Frontend | Trust Test IDs | [ ] |
+| T-097 | Frontend | Document Test IDs | [ ] |
+| T-098 | Frontend | Billing Test IDs | [ ] |
+| T-099 | Frontend | Dashboard/Nav Test IDs | [ ] |
 
 ---
 
 ## Sprint Completion Criteria
 
-- [ ] All 18 tasks pass acceptance criteria
+- [ ] All 24 tasks pass acceptance criteria
 - [ ] TLS working on `lexflow-prod`
 - [ ] E2E tests pass all 6 workflows
 - [ ] Performance baseline met (p95 <500ms)
