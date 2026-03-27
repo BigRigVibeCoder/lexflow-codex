@@ -89,6 +89,73 @@ version: 2.0.0
 
 ---
 
+# Rewind / Fast-Forward — Branch Strategy
+
+> **Golden rule:** `main` is NEVER modified. All demo work happens on branches.
+> Fast-forward = `git checkout main`. Rewind = `git checkout demo-sprint-2`.
+
+### How it works
+
+1. Both repos have a `demo-sprint-2` branch starting from the SPR-001 scaffold
+2. The agent works on `demo-sprint-2` — commits go there, not to `main`
+3. `main` still has the fully finished product (all 8 sprints)
+4. You can jump between states instantly
+
+### Current branch state
+
+| Repo | Branch | Base Commit | What's there |
+|:-----|:-------|:------------|:-------------|
+| lexflow-backend | `demo-sprint-2` | `d7b3b68` (tag: `cp-1-scaffold`) | Fastify scaffold, health endpoint, no features |
+| lexflow-frontend | `demo-sprint-2` | `79a8a4e` (tag: `cp-1-scaffold`) | Next.js scaffold, no features |
+
+### Commands
+
+```bash
+# ── REWIND to scaffold (start of sprint 2) ──
+cd ~/Documents/lexflow/lexflow-backend  && git checkout demo-sprint-2
+cd ~/Documents/lexflow/lexflow-frontend && git checkout demo-sprint-2
+
+# ── FAST-FORWARD to finished product ──
+cd ~/Documents/lexflow/lexflow-backend  && git checkout main
+cd ~/Documents/lexflow/lexflow-frontend && git checkout main
+
+# ── REWIND even further (empty repo, just CODEX submodule) ──
+cd ~/Documents/lexflow/lexflow-backend  && git checkout 8a6b32a
+cd ~/Documents/lexflow/lexflow-frontend && git checkout a6cc792
+
+# ── JUMP to any tagged checkpoint ──
+git checkout cp-1-scaffold    # SPR-001 scaffold
+git checkout cp-3-backend     # All backend sprints complete (backend only)
+git checkout cp-4-frontend    # All frontend sprints complete (frontend only)
+git checkout main             # Same as cp-3/cp-4 (latest)
+```
+
+### All tags across repos
+
+| Tag | Backend | Frontend | CODEX |
+|:----|:-------:|:--------:|:-----:|
+| `cp-1-scaffold` | `d7b3b68` | `79a8a4e` | — |
+| `cp-3-backend` | `fb280e3` | — | — |
+| `cp-4-frontend` | — | `d6f00ca` | — |
+| `cp-5-deployed` | — | — | `f84a275` |
+| `cp-6-audit` | — | — | `b9c39e8` |
+| `cp-7-deployed` | — | — | `f84a275` |
+| `v0.1.0` | `d7b3b68` | `79a8a4e` | — |
+
+### Safety net
+
+If something goes wrong on the demo branch:
+```bash
+# Abandon demo branch, go back to finished product
+git checkout main
+
+# If you need to restart the demo branch from scratch:
+git branch -D demo-sprint-2
+git checkout -b demo-sprint-2 cp-1-scaffold
+```
+
+---
+
 # Act 2: Sprint Reveals (15 min)
 
 > **Directory:** `/home/bdavidriggins/Documents/lexflow/`
